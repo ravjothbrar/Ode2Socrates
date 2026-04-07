@@ -11,32 +11,39 @@ const DEFAULT_SPACE = {
 export const useStore = create((set, get) => ({
   // ─── App state ─────────────────────────────────────────────────
   initialized: false,
-  view: 'canvas',          // 'canvas' | 'graph'
+  view: 'canvas',
   activeSpaceId: 'default',
   spaces: [DEFAULT_SPACE],
   nodes: [],
   edges: [],
   selectedNodeIds: [],
 
-  // ─── UI state ──────────────────────────────────────────────────
+  // ─── UI overlays ───────────────────────────────────────────────
   commandPaletteOpen: false,
   settingsOpen: false,
-  welcomeOpen: true,
+  tourOpen: false,           // replaces welcomeOpen
+  howToOpen: false,
   groqApiKey: '',
 
   // ─── Sidebar ───────────────────────────────────────────────────
-  sidebarContent: null,        // { type, text, suggestions }
+  sidebarTab: 'gadfly',      // 'gadfly' | 'chat'
+  sidebarContent: null,
   sidebarLoading: false,
 
   // ─── Blur input ────────────────────────────────────────────────
   blurText: '',
   blurFocused: false,
 
+  // ─── Wormholes ─────────────────────────────────────────────────
+  wormholes: [],             // [{ id, spaceAId, nodeAId, spaceBId, nodeBId, sim }]
+  wormholeVisible: false,
+
   // ─── Init ──────────────────────────────────────────────────────
   async init() {
-    const [spaces, key] = await Promise.all([
+    const [spaces, key, hasSeenTour] = await Promise.all([
       db.getAllSpaces(),
       db.getSetting('groqApiKey'),
+      db.getSetting('hasSeenTour'),
     ])
     const finalSpaces = spaces.length ? spaces : [DEFAULT_SPACE]
     if (!spaces.length) await db.saveSpace(DEFAULT_SPACE)
@@ -54,6 +61,7 @@ export const useStore = create((set, get) => ({
       nodes,
       edges,
       groqApiKey: key || '',
+      tourOpen: !hasSeenTour,
     })
   },
 
@@ -100,7 +108,6 @@ export const useStore = create((set, get) => ({
   // ─── Node actions ──────────────────────────────────────────────
   async createNode({ content = '', type = 'blur', x, y, tags = [] } = {}) {
     const { activeSpaceId, nodes } = get()
-    // Auto position: place near center with some spread
     const pos = nodes.length
     const defaultX = x ?? 200 + (pos % 4) * 320 + Math.random() * 40
     const defaultY = y ?? 150 + Math.floor(pos / 4) * 240 + Math.random() * 40
@@ -147,7 +154,6 @@ export const useStore = create((set, get) => ({
 
   updateNodePosition(id, x, y) {
     set(s => ({ nodes: s.nodes.map(n => n.id === id ? { ...n, x, y } : n) }))
-    // debounced persist handled in component
   },
 
   persistNodePosition(id, x, y) {
@@ -191,12 +197,23 @@ export const useStore = create((set, get) => ({
   // ─── Selection ─────────────────────────────────────────────────
   setSelectedNodeIds(ids) { set({ selectedNodeIds: ids }) },
 
+  // ─── Wormholes ─────────────────────────────────────────────────
+  setWormholes(wormholes) { set({ wormholes }) },
+  setWormholeVisible(v) { set({ wormholeVisible: v }) },
+
   // ─── UI actions ────────────────────────────────────────────────
   setView(view) { set({ view }) },
   toggleCommandPalette() { set(s => ({ commandPaletteOpen: !s.commandPaletteOpen })) },
   closeCommandPalette() { set({ commandPaletteOpen: false }) },
   setSettingsOpen(v) { set({ settingsOpen: v }) },
-  setWelcomeOpen(v) { set({ welcomeOpen: v }) },
+  setHowToOpen(v) { set({ howToOpen: v }) },
+
+  async setTourOpen(v) {
+    if (!v) await db.setSetting('hasSeenTour', true)
+    set({ tourOpen: v })
+  },
+
+  setSidebarTab(tab) { set({ sidebarTab: tab }) },
   setBlurText(t) { set({ blurText: t }) },
   setBlurFocused(v) { set({ blurFocused: v }) },
 
@@ -207,4 +224,7 @@ export const useStore = create((set, get) => ({
 
   setSidebarContent(c) { set({ sidebarContent: c }) },
   setSidebarLoading(v) { set({ sidebarLoading: v }) },
+
+  // Exposed by sidebar component for gap analysis
+  triggerGapAnalysis: null,
 }))

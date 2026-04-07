@@ -122,7 +122,39 @@ Be specific, harsh, and intellectually demanding.`,
   yield* streamChat({ apiKey, messages, max_tokens: 500, temperature: 0.7 })
 }
 
-// ─── Simple cosine similarity for ghost linking ───────────────────────────
+// ─── RAG Context Chat ─────────────────────────────────────────────────────
+
+export async function* getRagResponse({ apiKey, userMessage, relevantNodes, history = [] }) {
+  const context = relevantNodes.length
+    ? relevantNodes.map((n, i) =>
+        `[Node ${i + 1} | id:${n.id} | type:${n.type || 'note'}]\n"${n.content.slice(0, 300)}"`
+      ).join('\n\n')
+    : 'No closely matching notes found in the current space.'
+
+  const messages = [
+    {
+      role: 'system',
+      content: `You are an analytical assistant with access to the user's personal knowledge base.
+
+Relevant notes retrieved from their space:
+---
+${context}
+---
+
+Instructions:
+- Answer using their notes as context when relevant.
+- When you draw from a specific note, cite it inline as [Node: "first few words of the note..."].
+- If the notes don't contain enough information, answer from general knowledge but say so.
+- Be concise, direct, and intellectually precise.
+- Never pad or flatter.`,
+    },
+    ...history.slice(-6),
+    { role: 'user', content: userMessage },
+  ]
+  yield* streamChat({ apiKey, messages, max_tokens: 600, temperature: 0.65 })
+}
+
+// ─── Vector utilities for ghost linking & RAG ────────────────────────────
 
 export function cosineSimilarity(a, b) {
   if (!a || !b || a.length !== b.length) return 0
@@ -135,7 +167,6 @@ export function cosineSimilarity(a, b) {
   return dot / (Math.sqrt(magA) * Math.sqrt(magB) + 1e-10)
 }
 
-// Simple TF-IDF-like vector (no external model needed)
 export function textToVector(text, vocab) {
   const words = text.toLowerCase().match(/\b\w+\b/g) || []
   const freq = {}
@@ -150,4 +181,22 @@ export function buildVocab(texts) {
     words.forEach(w => all.add(w))
   }
   return [...all]
+}
+
+// Retrieve top-N most relevant nodes for RAG
+export function retrieveRelevantNodes(queryText, allNodes, topN = 5) {
+  if (!allNodes.length || !queryText.trim()) return []
+  const texts = [queryText, ...allNodes.map(n => n.content || '')]
+  const vocab = buildVocab(texts)
+  const queryVec = textToVector(queryText, vocab)
+  const scored = allNodes
+    .filter(n => n.content?.trim())
+    .map(n => ({
+      node: n,
+      score: cosineSimilarity(queryVec, textToVector(n.content, vocab)),
+    }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, topN)
+    .filter(x => x.score > 0.05)
+  return scored.map(x => x.node)
 }
