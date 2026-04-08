@@ -37,17 +37,21 @@ export const useStore = create((set, get) => ({
 
   // ─── Theme ─────────────────────────────────────────────────────
   isDarkMode: true,
+  accentColor: 'purple',     // 'purple' | 'blue' | 'white'
 
   // ─── Wormholes ─────────────────────────────────────────────────
   wormholes: [],             // [{ id, spaceAId, nodeAId, spaceBId, nodeBId, sim }]
   wormholeVisible: false,
+  wormholeLinks: {},         // { nodeId: { targetSpaceId, targetNodeId, wormholeId } }
 
   // ─── Init ──────────────────────────────────────────────────────
   async init() {
-    const [spaces, key, hasSeenTour] = await Promise.all([
+    const [spaces, key, hasSeenTour, wormholeLinksRaw, accentColor] = await Promise.all([
       db.getAllSpaces(),
       db.getSetting('groqApiKey'),
       db.getSetting('hasSeenTour'),
+      db.getSetting('wormholeLinks'),
+      db.getSetting('accentColor'),
     ])
     const finalSpaces = spaces.length ? spaces : [DEFAULT_SPACE]
     if (!spaces.length) await db.saveSpace(DEFAULT_SPACE)
@@ -58,6 +62,8 @@ export const useStore = create((set, get) => ({
       db.getEdgesBySpace(activeSpaceId),
     ])
 
+    const accent = accentColor || 'purple'
+    document.documentElement.setAttribute('data-accent', accent)
     set({
       initialized: true,
       spaces: finalSpaces,
@@ -66,6 +72,8 @@ export const useStore = create((set, get) => ({
       edges,
       groqApiKey: key || '',
       tourOpen: !hasSeenTour,
+      wormholeLinks: wormholeLinksRaw ? JSON.parse(wormholeLinksRaw) : {},
+      accentColor: accent,
     })
   },
 
@@ -205,6 +213,25 @@ export const useStore = create((set, get) => ({
   setWormholes(wormholes) { set({ wormholes }) },
   setWormholeVisible(v) { set({ wormholeVisible: v }) },
 
+  async createWormholeLink(wormhole) {
+    const updated = {
+      ...get().wormholeLinks,
+      [wormhole.nodeAId]: { targetSpaceId: wormhole.spaceBId, targetNodeId: wormhole.nodeBId, wormholeId: wormhole.id },
+      [wormhole.nodeBId]: { targetSpaceId: wormhole.spaceAId, targetNodeId: wormhole.nodeAId, wormholeId: wormhole.id },
+    }
+    set({ wormholeLinks: updated })
+    await db.setSetting('wormholeLinks', JSON.stringify(updated))
+  },
+
+  removeWormholeLink(wormholeId) {
+    const current = get().wormholeLinks
+    const updated = Object.fromEntries(
+      Object.entries(current).filter(([, v]) => v.wormholeId !== wormholeId)
+    )
+    set({ wormholeLinks: updated })
+    db.setSetting('wormholeLinks', JSON.stringify(updated))
+  },
+
   // ─── UI actions ────────────────────────────────────────────────
   setView(view) { set({ view }) },
   toggleCommandPalette() { set(s => ({ commandPaletteOpen: !s.commandPaletteOpen })) },
@@ -234,6 +261,12 @@ export const useStore = create((set, get) => ({
     const next = !get().isDarkMode
     set({ isDarkMode: next })
     document.documentElement.setAttribute('data-theme', next ? 'dark' : 'light')
+  },
+
+  async setAccentColor(color) {
+    await db.setSetting('accentColor', color)
+    document.documentElement.setAttribute('data-accent', color)
+    set({ accentColor: color })
   },
 
   // Exposed by sidebar component for gap analysis

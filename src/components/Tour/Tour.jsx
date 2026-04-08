@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useStore } from '../../store/useStore'
 import Button from '../Button'
 import SocratesLogo from '../Logo/SocratesLogo'
+import AccentPicker from '../Settings/AccentPicker'
 
 const codeStyle = {
   background: 'rgba(124,58,237,0.2)',
@@ -25,16 +26,16 @@ const STEPS = [
         <div style={{
           marginTop: 24,
           padding: '20px 16px',
-          background: 'rgba(76,29,149,0.12)',
+          background: 'var(--accent-a12)',
           borderRadius: 12,
-          border: '1px solid rgba(124,58,237,0.2)',
+          border: '1px solid var(--accent-a20)',
           textAlign: 'center',
         }}>
           <p style={{
             fontFamily: "'JetBrains Mono', monospace",
             fontSize: '28px',
             lineHeight: '1.3',
-            color: '#7c3aed',
+            color: 'var(--purple-mid)',
             fontWeight: 600,
             fontStyle: 'italic',
           }}>
@@ -43,7 +44,7 @@ const STEPS = [
           <p style={{
             fontFamily: "'JetBrains Mono', monospace",
             fontSize: '16px',
-            color: '#4c1d95',
+            color: 'var(--purple-dim)',
             marginTop: 12,
             opacity: 0.8,
           }}>
@@ -52,6 +53,13 @@ const STEPS = [
         </div>
       </>
     ),
+  },
+  {
+    id: 'appearance',
+    title: 'Choose your colour',
+    icon: '🎨',
+    highlight: null,
+    content: null, // rendered dynamically (needs store access)
   },
   {
     id: 'logo',
@@ -80,13 +88,13 @@ const STEPS = [
         <blockquote style={{
           margin: '18px 0 0',
           padding: '14px 20px',
-          borderLeft: '3px solid #7c3aed',
-          background: 'rgba(124,58,237,0.08)',
+          borderLeft: '3px solid var(--purple-mid)',
+          background: 'var(--accent-a08)',
           borderRadius: '0 10px 10px 0',
           fontSize: 17,
           fontWeight: 700,
           fontStyle: 'italic',
-          color: '#a78bfa',
+          color: 'var(--purple-bright)',
           lineHeight: 1.7,
         }}>
           "A space to find out what you think, how you think, and who you are."
@@ -228,8 +236,8 @@ function GadflyStepContent() {
       <div style={{
         marginTop: 18,
         padding: '14px 16px',
-        background: 'rgba(124,58,237,0.07)',
-        border: '1px solid rgba(124,58,237,0.35)',
+        background: 'var(--accent-a08)',
+        border: '1px solid var(--accent-a35)',
         borderRadius: 10,
       }}>
         <p style={{ fontWeight: 700, fontSize: 14, color: '#c4b5fd', marginBottom: 8 }}>
@@ -258,7 +266,7 @@ function GadflyStepContent() {
               flex: 1,
               padding: '8px 11px',
               background: 'rgba(8,8,15,0.7)',
-              border: '1px solid rgba(124,58,237,0.45)',
+              border: '1px solid var(--accent-a40)',
               borderRadius: 7,
               color: 'var(--text-primary)',
               fontSize: 13,
@@ -270,8 +278,8 @@ function GadflyStepContent() {
             onClick={handleSave}
             style={{
               padding: '8px 16px',
-              background: saved ? '#16a34a' : 'linear-gradient(135deg, #6d28d9, #5b21b6)',
-              border: `1px solid ${saved ? '#22c55e' : '#7c3aed'}`,
+              background: saved ? '#16a34a' : 'linear-gradient(135deg, var(--purple-dim), var(--purple-dim))',
+              border: `1px solid ${saved ? '#22c55e' : 'var(--purple-mid)'}`,
               borderRadius: 7,
               color: '#f5f3ff',
               fontSize: 13,
@@ -295,6 +303,17 @@ function GadflyStepContent() {
             ✓ API key is set — AI features are enabled.
           </p>
         )}
+      </div>
+    </>
+  )
+}
+
+function AppearanceStepContent() {
+  return (
+    <>
+      <p>Pick the <strong style={{ color: 'var(--purple-bright)' }}>accent colour</strong> for your experience. You can change it later in Settings.</p>
+      <div style={{ marginTop: 20 }}>
+        <AccentPicker />
       </div>
     </>
   )
@@ -365,7 +384,7 @@ export default function Tour() {
               width: i === step ? 28 : 9,
               height: 9,
               borderRadius: 5,
-              background: i === step ? '#7c3aed' : i < step ? '#4c1d95' : '#2a2a4a',
+              background: i === step ? 'var(--purple-mid)' : i < step ? 'var(--purple-dim)' : '#2a2a4a',
               transition: 'all 0.2s ease',
               cursor: 'pointer',
             }} onClick={() => setStep(i)} />
@@ -381,7 +400,7 @@ export default function Tour() {
             </h2>
           </div>
           <div style={{ fontSize: 16, color: 'var(--text-secondary)', lineHeight: 1.85 }}>
-            {current.id === 'gadfly' ? <GadflyStepContent /> : current.content}
+            {current.id === 'gadfly' ? <GadflyStepContent /> : current.id === 'appearance' ? <AppearanceStepContent /> : current.content}
           </div>
         </div>
 
@@ -455,8 +474,8 @@ const modalStyle = {
   maxHeight: '90vh',
   overflowY: 'auto',
   background: 'var(--bg-card)',
-  border: '1px solid rgba(124,58,237,0.4)',
+  border: '1px solid var(--accent-a40)',
   borderRadius: 20,
   padding: '36px 40px',
-  boxShadow: '0 0 80px #7c3aed22, 0 32px 64px rgba(0,0,0,0.6)',
+  boxShadow: '0 0 80px var(--border-glow), 0 32px 64px rgba(0,0,0,0.6)',
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
+import ReactMarkdown from 'react-markdown'
 import { useStore } from '../../store/useStore'
 import { getSocraticRejoinder, getGapAnalysis } from '../../api/groq'
 import Button from '../Button'
@@ -201,7 +202,7 @@ export default function SocraticSidebar({ typingText, onNodeCite }) {
               fontSize: 15, padding: '4px 6px', borderRadius: 6,
               transition: 'all 0.1s',
             }}
-            onMouseEnter={e => { if (hasKey) e.currentTarget.style.color = '#e9d5ff' }}
+            onMouseEnter={e => { if (hasKey) e.currentTarget.style.color = 'var(--lavender)' }}
             onMouseLeave={e => { if (hasKey) e.currentTarget.style.color = 'var(--purple-bright)' }}
           >↻</button>
         )}
@@ -218,7 +219,7 @@ export default function SocraticSidebar({ typingText, onNodeCite }) {
               boxShadow: `0 0 6px ${hasKey ? (sidebarLoading ? '#f59e0b' : '#22c55e') : '#ef4444'}`,
               animation: sidebarLoading ? 'pulse 1s infinite' : 'none',
             }} />
-            <span style={{ fontSize: 10, color: 'var(--text-muted)', fontFamily: "'JetBrains Mono', monospace" }}>
+            <span style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: "'JetBrains Mono', monospace" }}>
               {hasKey ? (sidebarLoading ? 'thinking…' : 'ready') : 'no api key'}
             </span>
           </div>
@@ -230,7 +231,7 @@ export default function SocraticSidebar({ typingText, onNodeCite }) {
           {isDistillation && sidebarContent.atoms?.length > 0 && (
             <div className="animate-slide-right">
               <SectionHeader icon="◈" label="Auto-Distillation" />
-              <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 10, lineHeight: 1.6 }}>
+              <p style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 10, lineHeight: 1.6 }}>
                 {sidebarContent.summary}
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
@@ -247,7 +248,7 @@ export default function SocraticSidebar({ typingText, onNodeCite }) {
 
           {/* Gap analysis header */}
           {isGap && (
-            <SectionHeader icon="🔍" label={`Gap Analysis — ${sidebarContent.nodes?.length} nodes`} />
+            <SectionHeader icon="🔍" label={`Gap Analysis — ${sidebarContent?.nodes?.length} nodes`} />
           )}
 
           {/* Streamed rejoinder / gap text */}
@@ -259,14 +260,17 @@ export default function SocraticSidebar({ typingText, onNodeCite }) {
                   label={streamText.startsWith('❓') ? 'Socratic Question' : "Devil's Advocate"}
                 />
               )}
-              <div style={{
-                fontSize: 12, lineHeight: 1.8, fontStyle: 'italic',
-                color: sidebarLoading ? 'var(--text-secondary)' : 'var(--text-primary)',
-                whiteSpace: 'pre-wrap', wordBreak: 'break-word',
-              }}>
-                {streamText}
+              <div
+                className="sidebar-markdown"
+                style={{
+                  fontSize: 13, lineHeight: 1.8,
+                  color: sidebarLoading ? 'var(--text-secondary)' : 'var(--text-primary)',
+                  wordBreak: 'break-word',
+                }}
+              >
+                <ReactMarkdown>{streamText}</ReactMarkdown>
                 {sidebarLoading && (
-                  <span className="animate-spin" style={{ display: 'inline-block', marginLeft: 4, fontSize: 11 }}>◌</span>
+                  <span className="animate-spin" style={{ display: 'inline-block', marginLeft: 4, fontSize: 12 }}>◌</span>
                 )}
               </div>
 
@@ -284,11 +288,11 @@ export default function SocraticSidebar({ typingText, onNodeCite }) {
                           background: 'var(--bg-input)',
                           border: '1px solid var(--border)',
                           borderRadius: 8, padding: '7px 10px',
-                          color: 'var(--text-primary)', fontSize: 12,
+                          color: 'var(--text-primary)', fontSize: 13,
                           fontFamily: "'Inter', sans-serif", outline: 'none',
                           lineHeight: 1.6, marginBottom: 7,
                         }}
-                        onFocus={e => e.target.style.borderColor = '#7c3aed'}
+                        onFocus={e => e.target.style.borderColor = 'var(--purple-mid)'}
                         onBlur={e => e.target.style.borderColor = 'var(--border)'}
                       />
                       <div style={{ display: 'flex', gap: 6 }}>
@@ -310,7 +314,7 @@ export default function SocraticSidebar({ typingText, onNodeCite }) {
                   style={{
                     marginTop: 10, background: 'none', border: 'none',
                     color: 'var(--text-muted)', cursor: 'pointer',
-                    fontSize: 10, padding: 0,
+                    fontSize: 11, padding: 0,
                     fontFamily: "'JetBrains Mono', monospace",
                   }}
                 >Clear ✕</button>
@@ -334,7 +338,7 @@ export default function SocraticSidebar({ typingText, onNodeCite }) {
         <div style={{
           padding: '7px 14px',
           borderTop: '1px solid var(--border)',
-          fontSize: 10, color: 'var(--text-muted)',
+          fontSize: 11, color: 'var(--text-muted)',
           fontFamily: "'JetBrains Mono', monospace",
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           flexShrink: 0,
@@ -342,7 +346,7 @@ export default function SocraticSidebar({ typingText, onNodeCite }) {
           <span>{conversationHistory.length / 2} exchange{conversationHistory.length / 2 !== 1 ? 's' : ''}</span>
           <button
             onClick={() => setConversationHistory([])}
-            style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: 10 }}
+            style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: 11 }}
           >Clear history</button>
         </div>
       )}
@@ -361,24 +365,24 @@ function TabButton({ active, onClick, icon, label, hasActivity, className }) {
       style={{
         flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
         padding: '10px 8px',
-        background: active ? 'rgba(124,58,237,0.12)' : h ? 'rgba(124,58,237,0.05)' : 'transparent',
+        background: active ? 'var(--accent-a12)' : h ? 'var(--accent-a08)' : 'transparent',
         border: 'none',
-        borderBottom: active ? '2px solid #7c3aed' : '2px solid transparent',
+        borderBottom: active ? '2px solid var(--purple-mid)' : '2px solid transparent',
         cursor: 'pointer',
-        fontSize: 12, fontWeight: active ? 600 : 400,
+        fontSize: 13, fontWeight: active ? 600 : 400,
         color: active ? 'var(--lavender)' : h ? 'var(--text-primary)' : 'var(--text-secondary)',
         transition: 'all 0.1s',
         position: 'relative',
       }}
     >
-      <span style={{ fontSize: 13 }}>{icon}</span>
+      <span style={{ fontSize: 14 }}>{icon}</span>
       {label}
       {hasActivity && !active && (
         <div style={{
           position: 'absolute', top: 6, right: 8,
           width: 5, height: 5, borderRadius: '50%',
-          background: '#7c3aed',
-          boxShadow: '0 0 6px #7c3aed',
+          background: 'var(--purple-mid)',
+          boxShadow: '0 0 6px var(--purple-mid)',
         }} />
       )}
     </button>
@@ -388,9 +392,9 @@ function TabButton({ active, onClick, icon, label, hasActivity, className }) {
 function SectionHeader({ icon, label }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 9 }}>
-      <span style={{ fontSize: 13 }}>{icon}</span>
+      <span style={{ fontSize: 14 }}>{icon}</span>
       <span style={{
-        fontSize: 9, fontWeight: 700, letterSpacing: '0.09em',
+        fontSize: 10, fontWeight: 700, letterSpacing: '0.09em',
         textTransform: 'uppercase', color: 'var(--purple-bright)',
         fontFamily: "'JetBrains Mono', monospace",
       }}>{label}</span>
@@ -409,19 +413,19 @@ function AtomCard({ atom, onAccept }) {
       display: 'flex', gap: 8, alignItems: 'flex-start',
     }}>
       <div style={{ flex: 1 }}>
-        <div style={{ fontSize: 9, fontWeight: 700, color, letterSpacing: '0.08em', fontFamily: "'JetBrains Mono'", textTransform: 'uppercase', marginBottom: 3 }}>
+        <div style={{ fontSize: 10, fontWeight: 700, color, letterSpacing: '0.08em', fontFamily: "'JetBrains Mono'", textTransform: 'uppercase', marginBottom: 3 }}>
           {atom.tag || atom.type}
         </div>
-        <div style={{ fontSize: 11, color: 'var(--text-primary)', lineHeight: 1.5 }}>{atom.content}</div>
+        <div style={{ fontSize: 12, color: 'var(--text-primary)', lineHeight: 1.5 }}>{atom.content}</div>
       </div>
       <button
         onClick={() => { onAccept(); setAccepted(true) }}
         disabled={accepted}
         style={{
-          background: accepted ? 'rgba(34,197,94,0.2)' : 'rgba(124,58,237,0.15)',
-          border: `1px solid ${accepted ? '#22c55e' : '#7c3aed'}`,
+          background: accepted ? 'rgba(34,197,94,0.2)' : 'var(--accent-a15)',
+          border: `1px solid ${accepted ? '#22c55e' : 'var(--purple-mid)'}`,
           borderRadius: 5, padding: '2px 8px',
-          fontSize: 10, cursor: accepted ? 'default' : 'pointer',
+          fontSize: 11, cursor: accepted ? 'default' : 'pointer',
           color: accepted ? '#22c55e' : 'var(--purple-bright)',
           fontFamily: "'JetBrains Mono'", flexShrink: 0,
           transition: 'all 0.15s',
@@ -436,7 +440,7 @@ function NoKeyPrompt() {
   return (
     <div style={{ textAlign: 'center', padding: '20px 4px' }}>
       <div style={{ fontSize: 24, marginBottom: 10 }}>🔑</div>
-      <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 14, lineHeight: 1.7 }}>
+      <p style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 14, lineHeight: 1.7 }}>
         Add your Groq API key to activate the Socratic Engine.
       </p>
       <Button variant="primary" size="sm" onClick={() => setSettingsOpen(true)} icon="⚙">
@@ -450,7 +454,7 @@ function IdleState() {
   return (
     <div style={{ padding: '10px 0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <SocratesLogo size="canvas" />
-      <p style={{ fontSize: 17, color: 'var(--text-muted)', textAlign: 'center', lineHeight: 1.8, marginTop: 14 }}>
+      <p style={{ fontSize: 19, color: 'var(--text-muted)', textAlign: 'center', lineHeight: 1.8, marginTop: 14 }}>
         Start typing in The Blur. Socrates will challenge your assumptions.
       </p>
     </div>

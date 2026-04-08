@@ -84,7 +84,7 @@ export function useWormholeDetector() {
 
 // Panel showing detected wormholes
 export default function WormholePanel() {
-  const { wormholes, wormholeVisible, spaces, nodes, switchSpace } = useStore()
+  const { wormholes, wormholeVisible, spaces, nodes, switchSpace, wormholeLinks, createWormholeLink, removeWormholeLink } = useStore()
   const setView = useStore(s => s.setView)
   const [open, setOpen] = useState(false)
   const [traveling, setTraveling] = useState(false)
@@ -198,42 +198,84 @@ export default function WormholePanel() {
 
           {/* Wormhole list */}
           <div style={{ padding: '8px 0', overflowY: 'auto', flex: 1 }}>
-            {wormholes.map(w => (
-              <div key={w.id} style={{
-                padding: '12px 16px',
-                borderBottom: '1px solid rgba(42,42,74,0.4)',
-              }}>
-                {/* Similarity score bar */}
-                <div style={{
-                  fontSize: 11, color: '#ec4899', marginBottom: 10,
-                  fontFamily: "'JetBrains Mono', monospace",
-                  display: 'flex', alignItems: 'center', gap: 8,
+            {wormholes.map(w => {
+              const isCreated = !!(wormholeLinks[w.nodeAId] || wormholeLinks[w.nodeBId])
+              return (
+                <div key={w.id} style={{
+                  padding: '12px 16px',
+                  borderBottom: '1px solid rgba(42,42,74,0.4)',
                 }}>
-                  <div style={{ flex: 1, height: 2, background: 'rgba(42,42,74,0.6)', borderRadius: 1 }}>
-                    <div style={{ width: `${w.sim * 100}%`, height: '100%', background: '#ec4899', borderRadius: 1 }} />
+                  {/* Similarity score bar */}
+                  <div style={{
+                    fontSize: 11, color: '#ec4899', marginBottom: 10,
+                    fontFamily: "'JetBrains Mono', monospace",
+                    display: 'flex', alignItems: 'center', gap: 8,
+                  }}>
+                    <div style={{ flex: 1, height: 2, background: 'rgba(42,42,74,0.6)', borderRadius: 1 }}>
+                      <div style={{ width: `${w.sim * 100}%`, height: '100%', background: '#ec4899', borderRadius: 1 }} />
+                    </div>
+                    <span>{Math.round(w.sim * 100)}% match</span>
                   </div>
-                  <span>{Math.round(w.sim * 100)}% match</span>
+
+                  {/* Node A */}
+                  <WormholeNode
+                    spaceName={getSpaceName(w.spaceAId)}
+                    content={w.nodeAContent}
+                    targetSpaceName={getSpaceName(w.spaceBId)}
+                    onNavigate={() => navigateTo(w.spaceBId, w.nodeBId)}
+                  />
+
+                  <div style={{ textAlign: 'center', fontSize: 18, color: '#ec4899', margin: '6px 0', opacity: 0.6 }}>⟷</div>
+
+                  {/* Node B */}
+                  <WormholeNode
+                    spaceName={getSpaceName(w.spaceBId)}
+                    content={w.nodeBContent}
+                    targetSpaceName={getSpaceName(w.spaceAId)}
+                    onNavigate={() => navigateTo(w.spaceAId, w.nodeAId)}
+                  />
+
+                  {/* Create / Remove Wormhole button */}
+                  <div style={{ marginTop: 10 }}>
+                    {isCreated ? (
+                      <button
+                        onClick={() => removeWormholeLink(w.id)}
+                        style={{
+                          width: '100%', padding: '6px 0',
+                          background: 'rgba(236,72,153,0.12)',
+                          border: '1px solid rgba(236,72,153,0.5)',
+                          borderRadius: 7, cursor: 'pointer',
+                          color: '#f9a8d4', fontSize: 12, fontWeight: 600,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                          transition: 'all 0.15s',
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(236,72,153,0.22)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(236,72,153,0.12)'}
+                      >
+                        <span>🌀</span> Wormhole Active — Remove
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => createWormholeLink(w)}
+                        style={{
+                          width: '100%', padding: '6px 0',
+                          background: 'rgba(236,72,153,0.08)',
+                          border: '1px dashed rgba(236,72,153,0.4)',
+                          borderRadius: 7, cursor: 'pointer',
+                          color: '#f9a8d4', fontSize: 12, fontWeight: 600,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                          transition: 'all 0.15s',
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(236,72,153,0.18)'; e.currentTarget.style.borderStyle = 'solid' }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(236,72,153,0.08)'; e.currentTarget.style.borderStyle = 'dashed' }}
+                      >
+                        <span>🌀</span> Create Wormhole
+                      </button>
+                    )}
+                  </div>
                 </div>
-
-                {/* Node A */}
-                <WormholeNode
-                  spaceName={getSpaceName(w.spaceAId)}
-                  content={w.nodeAContent}
-                  targetSpaceName={getSpaceName(w.spaceBId)}
-                  onNavigate={() => navigateTo(w.spaceBId, w.nodeBId)}
-                />
-
-                <div style={{ textAlign: 'center', fontSize: 18, color: '#ec4899', margin: '6px 0', opacity: 0.6 }}>⟷</div>
-
-                {/* Node B */}
-                <WormholeNode
-                  spaceName={getSpaceName(w.spaceBId)}
-                  content={w.nodeBContent}
-                  targetSpaceName={getSpaceName(w.spaceAId)}
-                  onNavigate={() => navigateTo(w.spaceAId, w.nodeAId)}
-                />
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       )}

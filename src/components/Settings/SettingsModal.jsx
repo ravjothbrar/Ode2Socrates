@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useStore } from '../../store/useStore'
 import Button from '../Button'
 import { exportSpace } from '../../utils/export'
+import AccentPicker from './AccentPicker'
 
 export default function SettingsModal() {
   const { settingsOpen, setSettingsOpen, groqApiKey, setGroqApiKey,
@@ -43,7 +44,7 @@ export default function SettingsModal() {
           borderRadius: 16,
           width: 480,
           maxWidth: '90vw',
-          boxShadow: '0 0 40px #7c3aed22, 0 24px 48px rgba(0,0,0,0.6)',
+          boxShadow: '0 0 40px var(--border-glow), 0 24px 48px rgba(0,0,0,0.6)',
           overflow: 'hidden',
         }}
       >
@@ -87,7 +88,7 @@ export default function SettingsModal() {
                     fontFamily: "'JetBrains Mono', monospace",
                     outline: 'none',
                   }}
-                  onFocus={e => e.target.style.borderColor = '#7c3aed'}
+                  onFocus={e => e.target.style.borderColor = 'var(--purple-mid)'}
                   onBlur={e => e.target.style.borderColor = 'var(--border)'}
                 />
                 <button
@@ -121,10 +122,17 @@ export default function SettingsModal() {
 
           <Divider />
 
+          {/* Accent colour */}
+          <Section title="🎨 Accent Colour" subtitle="Pick the main colour used throughout the app.">
+            <AccentPicker />
+          </Section>
+
+          <Divider />
+
           {/* About */}
           <Section title="ℹ About" subtitle="">
             <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.7 }}>
-              <p><span style={{ color: 'var(--purple-bright)' }}>Ode2Socrates</span> — A Socratic, spatial note-taking tool.</p>
+              <p><span style={{ color: 'var(--text-accent)' }}>Ode2Socrates</span> — A Socratic, spatial note-taking tool.</p>
               <p style={{ marginTop: 4 }}>All data stored locally in IndexedDB. Nothing leaves your browser except Groq API calls.</p>
               <p style={{ marginTop: 4, fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'var(--text-muted)' }}>
                 Built with React + React Flow + Groq

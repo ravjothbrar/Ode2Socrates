@@ -15,7 +15,8 @@ const TYPE_META = {
 }
 
 export default function NodeCard({ id, data }) {
-  const { updateNode, deleteNode } = useStore()
+  const { updateNode, deleteNode, wormholeLinks } = useStore()
+  const wormholeLink = wormholeLinks?.[id]
   const [editing, setEditing] = useState(data.isNew || false)
   const [content, setContent] = useState(data.content || '')
   const [hovered, setHovered] = useState(false)
@@ -72,13 +73,36 @@ export default function NodeCard({ id, data }) {
         padding: '8px 10px 6px',
         borderBottom: `1px solid ${meta.color}22`,
       }}>
-        <span style={{
-          fontSize: 10, fontWeight: 600, letterSpacing: '0.06em',
-          color: meta.color, fontFamily: "'JetBrains Mono', monospace",
-          textTransform: 'uppercase',
-        }}>
-          {meta.label}
-        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{
+            fontSize: 10, fontWeight: 600, letterSpacing: '0.06em',
+            color: meta.color, fontFamily: "'JetBrains Mono', monospace",
+            textTransform: 'uppercase',
+          }}>
+            {meta.label}
+          </span>
+          {wormholeLink && (
+            <button
+              title="Jump to wormhole link"
+              onClick={e => {
+                e.stopPropagation()
+                window.dispatchEvent(new CustomEvent('ode2-wormhole-navigate', {
+                  detail: { targetSpaceId: wormholeLink.targetSpaceId, targetNodeId: wormholeLink.targetNodeId }
+                }))
+              }}
+              style={{
+                background: 'rgba(236,72,153,0.18)', border: '1px solid rgba(236,72,153,0.5)',
+                borderRadius: 99, padding: '1px 6px',
+                cursor: 'pointer', fontSize: 10, color: '#f9a8d4',
+                display: 'flex', alignItems: 'center', gap: 3,
+                transition: 'all 0.12s', lineHeight: 1.4,
+                animation: 'pulse 3s infinite',
+              }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(236,72,153,0.32)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'rgba(236,72,153,0.18)'}
+            >🌀</button>
+          )}
+        </div>
         {hovered && (
           <div style={{ display: 'flex', gap: 4 }}>
             <IconBtn title="Edit" onClick={() => setEditing(true)}>✎</IconBtn>
