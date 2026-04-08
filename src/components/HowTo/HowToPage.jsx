@@ -208,8 +208,8 @@ export default function HowToPage() {
           </div>
 
           {/* Body */}
-          <div style={{ flex: 1, overflowY: 'auto', padding: '48px' }}>
-            <div style={{ fontSize: 26, color: 'var(--text-secondary)', lineHeight: 1.85, maxWidth: 900 }}>
+          <div style={{ flex: 1, overflowY: 'auto', padding: '32px 40px' }}>
+            <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.85 }}>
               {current.content}
             </div>
           </div>
@@ -222,28 +222,28 @@ export default function HowToPage() {
 // ─── Section content components ────────────────────────────────────────────
 
 const H = ({ children }) => (
-  <h3 style={{ fontSize: 26, fontWeight: 700, color: 'var(--text-primary)', margin: '36px 0 12px' }}>{children}</h3>
+  <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', margin: '18px 0 6px' }}>{children}</h3>
 )
-const P = ({ children }) => <p style={{ marginBottom: 16 }}>{children}</p>
+const P = ({ children }) => <p style={{ marginBottom: 8 }}>{children}</p>
 const C = ({ children }) => (
   <code style={{
-    background: 'rgba(124,58,237,0.2)', padding: '2px 10px',
-    borderRadius: 6, color: '#c4b5fd',
-    fontFamily: "'JetBrains Mono', monospace", fontSize: 22,
+    background: 'rgba(124,58,237,0.2)', padding: '1px 5px',
+    borderRadius: 3, color: '#c4b5fd',
+    fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
   }}>{children}</code>
 )
-const Li = ({ children }) => <li style={{ marginBottom: 10 }}>{children}</li>
+const Li = ({ children }) => <li style={{ marginBottom: 5 }}>{children}</li>
 const Callout = ({ children, color = '#7c3aed' }) => (
   <div style={{
     background: `${color}11`, border: `1px solid ${color}33`,
-    borderRadius: 14, padding: '20px 28px', margin: '24px 0',
-    fontSize: 24, lineHeight: 1.7,
+    borderRadius: 8, padding: '10px 14px', margin: '12px 0',
+    fontSize: 12, lineHeight: 1.7,
   }}>{children}</div>
 )
 const ShortcutRow = ({ keys, desc }) => (
-  <div style={{ display: 'flex', gap: 24, alignItems: 'center', marginBottom: 16 }}>
+  <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 8 }}>
     <C>{keys}</C>
-    <span style={{ color: 'var(--text-secondary)', fontSize: 24 }}>{desc}</span>
+    <span style={{ color: 'var(--text-secondary)', fontSize: 12 }}>{desc}</span>
   </div>
 )
 
@@ -298,10 +298,10 @@ function NodesSection() {
       <P>Every node has a type that controls its visual appearance and how the AI classifies it. The type is inferred automatically or set manually via tags.</P>
       <H>Node types</H>
       {types.map(t => (
-        <div key={t.tag} style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 14 }}>
-          <div style={{ width: 16, height: 16, borderRadius: '50%', background: t.color, flexShrink: 0 }} />
+        <div key={t.tag} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 7 }}>
+          <div style={{ width: 8, height: 8, borderRadius: '50%', background: t.color, flexShrink: 0 }} />
           <C>{t.tag}</C>
-          <span style={{ fontSize: 24, color: 'var(--text-secondary)' }}>{t.desc}</span>
+          <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{t.desc}</span>
         </div>
       ))}
       <H>Editing nodes</H>
