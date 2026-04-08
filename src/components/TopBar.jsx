@@ -21,10 +21,10 @@ function WhyModal({ onClose }) {
         style={{
           width: 648, maxWidth: '92vw',
           background: 'var(--bg-card)',
-          border: '1px solid rgba(124,58,237,0.45)',
+          border: '1px solid var(--accent-a40)',
           borderRadius: 18,
           padding: '38px 43px 34px',
-          boxShadow: '0 0 60px #7c3aed22, 0 24px 48px rgba(0,0,0,0.65)',
+          boxShadow: '0 0 60px var(--border-glow), 0 24px 48px rgba(0,0,0,0.65)',
           position: 'relative',
         }}
       >
@@ -75,12 +75,12 @@ function WhyModal({ onClose }) {
             Through the power of Socratic rejoinders, we truly get to the heart of your thoughts.
           </p>
 
-          {/* Quote — last sentence, bigger bold italic */}
+          {/* Quote */}
           <blockquote style={{
             margin: '8px 0 0',
             padding: '14px 20px',
-            borderLeft: '3px solid #7c3aed',
-            background: 'rgba(124,58,237,0.08)',
+            borderLeft: '3px solid var(--purple-mid)',
+            background: 'var(--accent-a08)',
             borderRadius: '0 10px 10px 0',
             fontSize: 19,
             fontWeight: 700,
@@ -94,23 +94,20 @@ function WhyModal({ onClose }) {
         </div>
 
         {/* Footer */}
-        <div style={{
-          marginTop: 24,
-          display: 'flex', justifyContent: 'flex-end',
-        }}>
+        <div style={{ marginTop: 24, display: 'flex', justifyContent: 'flex-end' }}>
           <button
             onClick={onClose}
             style={{
               padding: '7px 18px', borderRadius: 8,
-              background: 'linear-gradient(135deg, #6d28d9, #5b21b6)',
-              border: '1px solid #7c3aed',
-              color: '#f5f3ff', fontSize: 12, fontWeight: 600,
+              background: 'linear-gradient(135deg, var(--purple-dim), var(--purple-mid))',
+              border: '1px solid var(--purple-mid)',
+              color: 'rgba(255,255,255,0.93)', fontSize: 12, fontWeight: 600,
               cursor: 'pointer',
-              boxShadow: '0 0 12px #7c3aed33',
+              boxShadow: '0 0 12px var(--border-glow)',
               transition: 'all 0.15s',
             }}
-            onMouseEnter={e => e.currentTarget.style.boxShadow = '0 0 20px #7c3aed55'}
-            onMouseLeave={e => e.currentTarget.style.boxShadow = '0 0 12px #7c3aed33'}
+            onMouseEnter={e => e.currentTarget.style.boxShadow = '0 0 20px var(--border-glow)'}
+            onMouseLeave={e => e.currentTarget.style.boxShadow = '0 0 12px var(--border-glow)'}
           >
             ✦ Got it
           </button>
@@ -132,25 +129,25 @@ export default function TopBar() {
   const iconBtn = (hover) => ({
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     width: 34, height: 34,
-    background: hover ? 'rgba(167,139,250,0.15)' : 'rgba(124,58,237,0.08)',
-    border: `1px solid ${hover ? '#7c3aed' : 'rgba(124,58,237,0.35)'}`,
+    background: hover ? 'var(--accent-a15)' : 'var(--accent-a08)',
+    border: `1px solid ${hover ? 'var(--purple-mid)' : 'var(--accent-a35)'}`,
     borderRadius: 99,
     cursor: 'pointer',
     transition: 'all 0.15s ease',
-    color: hover ? '#e9d5ff' : '#a78bfa',
-    boxShadow: hover ? '0 0 0 1px #7c3aed33' : 'none',
+    color: hover ? 'var(--lavender)' : 'var(--purple-bright)',
+    boxShadow: hover ? '0 0 0 1px var(--border-glow)' : 'none',
   })
 
   const pillStyle = (hover) => ({
     display: 'flex', alignItems: 'center', gap: 7,
-    background: hover ? 'rgba(167,139,250,0.15)' : 'rgba(124,58,237,0.08)',
-    border: `1px solid ${hover ? '#7c3aed' : 'rgba(124,58,237,0.35)'}`,
+    background: hover ? 'var(--accent-a15)' : 'var(--accent-a08)',
+    border: `1px solid ${hover ? 'var(--purple-mid)' : 'var(--accent-a35)'}`,
     borderRadius: 99,
     padding: '5px 14px 5px 10px',
     cursor: 'pointer',
     transition: 'all 0.15s ease',
-    color: hover ? '#e9d5ff' : '#a78bfa',
-    boxShadow: hover ? '0 0 0 1px #7c3aed33, 0 0 12px #7c3aed22' : 'none',
+    color: hover ? 'var(--lavender)' : 'var(--purple-bright)',
+    boxShadow: hover ? '0 0 0 1px var(--border-glow), 0 0 12px var(--border-glow)' : 'none',
     textDecoration: 'none',
     flexShrink: 0,
     fontSize: 12, fontWeight: 500,
@@ -180,7 +177,7 @@ export default function TopBar() {
             onMouseEnter={() => setHoverWhy(true)}
             onMouseLeave={() => setHoverWhy(false)}
             onClick={() => setWhyOpen(true)}
-            style={{ ...pillStyle(hoverWhy), border: `1px solid ${hoverWhy ? '#7c3aed' : 'rgba(124,58,237,0.35)'}` }}
+            style={pillStyle(hoverWhy)}
           >
             <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
               <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.5"/>
@@ -219,7 +216,7 @@ export default function TopBar() {
             fontSize: 18, fontWeight: 800,
             fontFamily: "'Inter', sans-serif",
             letterSpacing: '0.05em',
-            background: 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 50%, #c4b5fd 100%)',
+            background: 'linear-gradient(135deg, var(--purple-bright) 0%, var(--purple-mid) 50%, var(--purple-pale) 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
