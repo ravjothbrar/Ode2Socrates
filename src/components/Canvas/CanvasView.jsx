@@ -215,7 +215,7 @@ function CanvasInner() {
         style={{ background: 'var(--bg-deep)' }}
       >
         <Background color="#2a2a4a" gap={32} size={1} style={{ opacity: 0.35 }} />
-        <Controls position="bottom-left" style={{ bottom: 90 }} />
+        <Controls position="bottom-left" style={{ bottom: 90 }} showInteractive={false} />
       </ReactFlow>
 
       {overlapPrompt && (

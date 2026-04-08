@@ -1,6 +1,16 @@
 import React, { useState } from 'react'
 import { useStore } from '../../store/useStore'
 import Button from '../Button'
+import SocratesLogo from '../Logo/SocratesLogo'
+
+const codeStyle = {
+  background: 'rgba(124,58,237,0.2)',
+  padding: '2px 7px',
+  borderRadius: 4,
+  color: '#c4b5fd',
+  fontFamily: "'JetBrains Mono', monospace",
+  fontSize: 13,
+}
 
 const STEPS = [
   {
@@ -50,8 +60,37 @@ const STEPS = [
     highlight: '.canvas-logo',
     content: (
       <>
-        <p>That glowing figure in the top-left is Socrates himself — watching over your canvas.</p>
+        <div style={{ display: 'flex', justifyContent: 'center', margin: '8px 0 20px' }}>
+          <SocratesLogo size="canvas" />
+        </div>
+        <p>That figure in the top-left is Socrates himself — watching over your canvas.</p>
         <p style={{ marginTop: 12 }}>He's not just decoration. The <strong style={{ color: '#c4b5fd' }}>Socratic Engine</strong> in the sidebar is his voice.</p>
+      </>
+    ),
+  },
+  {
+    id: 'why',
+    title: 'Why Ode 2 Socrates?',
+    icon: '◈',
+    highlight: null,
+    content: (
+      <>
+        <p>Ode 2 Socrates is a browser-based reflection tool — built to help you look inward, question your assumptions, and form arguments with AI assistance.</p>
+        <p style={{ marginTop: 12 }}>It maps your thinking as a spatial graph, revealing connections and blind spots you didn't know were there.</p>
+        <blockquote style={{
+          margin: '18px 0 0',
+          padding: '14px 20px',
+          borderLeft: '3px solid #7c3aed',
+          background: 'rgba(124,58,237,0.08)',
+          borderRadius: '0 10px 10px 0',
+          fontSize: 17,
+          fontWeight: 700,
+          fontStyle: 'italic',
+          color: '#a78bfa',
+          lineHeight: 1.7,
+        }}>
+          "A space to find out what you think, how you think, and who you are."
+        </blockquote>
       </>
     ),
   },
@@ -105,21 +144,11 @@ const STEPS = [
   },
   {
     id: 'gadfly',
+    // content rendered dynamically inside Tour component (needs store access)
     title: 'The Gadfly — passive AI',
     icon: '⚡',
     highlight: '.sidebar-gadfly',
-    content: (
-      <>
-        <p>The <strong style={{ color: '#c4b5fd' }}>Gadfly tab</strong> in the right sidebar streams Socratic challenges as you type — automatically, every 10 seconds.</p>
-        <ul style={{ marginTop: 12, paddingLeft: 20, lineHeight: 2 }}>
-          <li><code style={codeStyle}>❓</code> A probing question exposing your assumptions</li>
-          <li><code style={codeStyle}>⚡</code> A Devil's Advocate counter-position</li>
-          <li>Click <strong style={{ color: '#c4b5fd' }}>Answer</strong> to spawn a connected response node</li>
-          <li>Hit <strong style={{ color: '#c4b5fd' }}>↻</strong> to trigger manually</li>
-        </ul>
-        <p style={{ marginTop: 12, fontSize: 14, color: 'var(--text-muted)' }}>Requires a Groq API key in Settings.</p>
-      </>
-    ),
+    content: null,
   },
   {
     id: 'chat',
@@ -172,13 +201,103 @@ const STEPS = [
   },
 ]
 
-const codeStyle = {
-  background: 'rgba(124,58,237,0.2)',
-  padding: '2px 7px',
-  borderRadius: 4,
-  color: '#c4b5fd',
-  fontFamily: "'JetBrains Mono', monospace",
-  fontSize: 13,
+// ── Dynamic Gadfly step (needs store access for API key input) ────────────────
+function GadflyStepContent() {
+  const { groqApiKey, setGroqApiKey } = useStore()
+  const [keyInput, setKeyInput] = useState(groqApiKey || '')
+  const [saved, setSaved] = useState(false)
+
+  function handleSave() {
+    const trimmed = keyInput.trim()
+    setGroqApiKey(trimmed)
+    setSaved(true)
+    setTimeout(() => setSaved(false), 2000)
+  }
+
+  return (
+    <>
+      <p>The <strong style={{ color: '#c4b5fd' }}>Gadfly tab</strong> in the right sidebar automatically fires Socratic challenges as you type — at key word-count milestones.</p>
+      <ul style={{ marginTop: 12, paddingLeft: 20, lineHeight: 2 }}>
+        <li><code style={codeStyle}>❓</code> A probing question exposing your assumptions</li>
+        <li><code style={codeStyle}>⚡</code> A Devil's Advocate counter-position</li>
+        <li>Click <strong style={{ color: '#c4b5fd' }}>Answer</strong> to spawn a connected response node</li>
+        <li>Hit <strong style={{ color: '#c4b5fd' }}>↻</strong> to trigger manually at any time</li>
+      </ul>
+
+      {/* API Key section */}
+      <div style={{
+        marginTop: 18,
+        padding: '14px 16px',
+        background: 'rgba(124,58,237,0.07)',
+        border: '1px solid rgba(124,58,237,0.35)',
+        borderRadius: 10,
+      }}>
+        <p style={{ fontWeight: 700, fontSize: 14, color: '#c4b5fd', marginBottom: 8 }}>
+          🔑 A Groq API key is required
+        </p>
+        <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 12, lineHeight: 1.7 }}>
+          Groq is <strong style={{ color: 'var(--text-primary)' }}>completely free</strong> — no credit card needed, just create an account.{' '}
+          <a
+            href="https://console.groq.com/home"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: '#a78bfa', textDecoration: 'underline' }}
+          >
+            Get your free API key at console.groq.com
+          </a>
+          , then paste it below or in Settings.
+        </p>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <input
+            type="password"
+            placeholder="gsk_..."
+            value={keyInput}
+            onChange={e => setKeyInput(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') handleSave() }}
+            style={{
+              flex: 1,
+              padding: '8px 11px',
+              background: 'rgba(8,8,15,0.7)',
+              border: '1px solid rgba(124,58,237,0.45)',
+              borderRadius: 7,
+              color: 'var(--text-primary)',
+              fontSize: 13,
+              fontFamily: "'JetBrains Mono', monospace",
+              outline: 'none',
+            }}
+          />
+          <button
+            onClick={handleSave}
+            style={{
+              padding: '8px 16px',
+              background: saved ? '#16a34a' : 'linear-gradient(135deg, #6d28d9, #5b21b6)',
+              border: `1px solid ${saved ? '#22c55e' : '#7c3aed'}`,
+              borderRadius: 7,
+              color: '#f5f3ff',
+              fontSize: 13,
+              fontWeight: 600,
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              transition: 'all 0.2s',
+            }}
+          >
+            {saved ? '✓ Saved' : 'Save key'}
+          </button>
+        </div>
+
+        {!groqApiKey && (
+          <p style={{ marginTop: 10, fontSize: 13, color: '#f97316', fontWeight: 600, lineHeight: 1.5 }}>
+            ⚠ No API key added — AI features will not work until you add one.
+          </p>
+        )}
+        {groqApiKey && (
+          <p style={{ marginTop: 10, fontSize: 13, color: '#22c55e', fontWeight: 600 }}>
+            ✓ API key is set — AI features are enabled.
+          </p>
+        )}
+      </div>
+    </>
+  )
 }
 
 export default function Tour() {
@@ -262,7 +381,7 @@ export default function Tour() {
             </h2>
           </div>
           <div style={{ fontSize: 16, color: 'var(--text-secondary)', lineHeight: 1.85 }}>
-            {current.content}
+            {current.id === 'gadfly' ? <GadflyStepContent /> : current.content}
           </div>
         </div>
 

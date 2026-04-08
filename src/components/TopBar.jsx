@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useStore } from '../store/useStore'
+import SocratesLogo from './Logo/SocratesLogo'
 
 function WhyModal({ onClose }) {
   return (
@@ -41,10 +42,15 @@ function WhyModal({ onClose }) {
           onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
         >×</button>
 
+        {/* Socrates art */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+          <SocratesLogo size="canvas" />
+        </div>
+
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
           <span style={{
-            fontSize: 11, fontWeight: 700,
+            fontSize: 15, fontWeight: 700,
             fontFamily: "'JetBrains Mono', monospace",
             letterSpacing: '0.12em',
             color: 'var(--purple-bright)',
