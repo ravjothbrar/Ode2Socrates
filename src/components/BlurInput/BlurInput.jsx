@@ -225,7 +225,7 @@ export default function BlurInput({ onTyping }) {
                   padding: '8px 14px', background: 'transparent', border: 'none',
                   cursor: 'pointer', textAlign: 'left',
                 }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(124,58,237,0.15)'}
+                onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-a15)'}
                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
               >
                 <span style={{ fontSize: 14, color: 'var(--purple-bright)', width: 18, textAlign: 'center' }}>{t.icon}</span>
@@ -243,10 +243,10 @@ export default function BlurInput({ onTyping }) {
       <div style={{
         background: 'rgba(13,13,26,0.92)',
         backdropFilter: 'blur(20px)',
-        border: `1px solid ${focused ? '#7c3aed' : '#2a2a4a'}`,
+        border: `1px solid ${focused ? 'var(--purple-mid)' : '#2a2a4a'}`,
         borderRadius: 14,
         boxShadow: focused
-          ? '0 0 0 2px #7c3aed33, 0 8px 32px rgba(0,0,0,0.6)'
+          ? '0 0 0 2px var(--border-glow), 0 8px 32px rgba(0,0,0,0.6)'
           : '0 4px 20px rgba(0,0,0,0.4)',
         transition: 'all 0.15s',
         overflow: 'hidden',
@@ -265,9 +265,9 @@ export default function BlurInput({ onTyping }) {
             ◈ The Blur
           </div>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 10, color: 'var(--text-muted)' }}>
-            <span>Type <code style={{ background: 'rgba(124,58,237,0.2)', padding: '0 4px', borderRadius: 3, color: 'var(--purple-bright)', fontFamily: "'JetBrains Mono'" }}>#</code> to tag</span>
+            <span>Type <code style={{ background: 'var(--accent-a20)', padding: '0 4px', borderRadius: 3, color: 'var(--purple-bright)', fontFamily: "'JetBrains Mono'" }}>#</code> to tag</span>
             <span style={{ color: 'var(--border)' }}>·</span>
-            <span><code style={{ background: 'rgba(124,58,237,0.2)', padding: '0 4px', borderRadius: 3, color: 'var(--purple-bright)', fontFamily: "'JetBrains Mono'" }}>↵</code> to commit</span>
+            <span><code style={{ background: 'var(--accent-a20)', padding: '0 4px', borderRadius: 3, color: 'var(--purple-bright)', fontFamily: "'JetBrains Mono'" }}>↵</code> to commit</span>
           </div>
         </div>
 
@@ -310,9 +310,9 @@ export default function BlurInput({ onTyping }) {
                     ...action.style,
                   }}
                   onMouseEnter={e => {
-                    e.currentTarget.style.background = 'rgba(124,58,237,0.2)'
-                    e.currentTarget.style.borderColor = 'rgba(124,58,237,0.4)'
-                    e.currentTarget.style.color = '#c4b5fd'
+                    e.currentTarget.style.background = 'var(--accent-a20)'
+                    e.currentTarget.style.borderColor = 'var(--accent-a40)'
+                    e.currentTarget.style.color = 'var(--purple-pale)'
                   }}
                   onMouseLeave={e => {
                     e.currentTarget.style.background = 'transparent'
@@ -367,13 +367,13 @@ export default function BlurInput({ onTyping }) {
                 }}
                 style={{
                   fontSize: 10, padding: '2px 7px', borderRadius: 5,
-                  background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.25)',
+                  background: 'var(--accent-a12)', border: '1px solid var(--accent-a25)',
                   color: 'var(--purple-bright)', cursor: 'pointer',
                   fontFamily: "'JetBrains Mono', monospace",
                   transition: 'all 0.1s',
                 }}
-                onMouseEnter={e => { e.target.style.background = 'rgba(124,58,237,0.25)'; e.target.style.borderColor = '#7c3aed' }}
-                onMouseLeave={e => { e.target.style.background = 'rgba(124,58,237,0.1)'; e.target.style.borderColor = 'rgba(124,58,237,0.25)' }}
+                onMouseEnter={e => { e.target.style.background = 'var(--accent-a25)'; e.target.style.borderColor = 'var(--purple-mid)' }}
+                onMouseLeave={e => { e.target.style.background = 'var(--accent-a12)'; e.target.style.borderColor = 'var(--accent-a25)' }}
               >{t.tag}</button>
             ))}
           </div>
@@ -383,12 +383,12 @@ export default function BlurInput({ onTyping }) {
             style={{
               display: 'flex', alignItems: 'center', gap: 6,
               padding: '6px 14px', borderRadius: 8,
-              background: text.trim() ? 'linear-gradient(135deg, #6d28d9, #5b21b6)' : 'rgba(42,42,74,0.5)',
-              border: `1px solid ${text.trim() ? '#7c3aed' : 'var(--border)'}`,
+              background: text.trim() ? 'linear-gradient(135deg, var(--purple-dim), var(--purple-dim))' : 'rgba(42,42,74,0.5)',
+              border: `1px solid ${text.trim() ? 'var(--purple-mid)' : 'var(--border)'}`,
               color: text.trim() ? '#f5f3ff' : 'var(--text-muted)',
               fontSize: 12, fontWeight: 600, cursor: text.trim() ? 'pointer' : 'default',
               transition: 'all 0.15s',
-              boxShadow: text.trim() ? '0 0 12px #7c3aed33' : 'none',
+              boxShadow: text.trim() ? '0 0 12px var(--border-glow)' : 'none',
             }}
           >
             {submitting ? (

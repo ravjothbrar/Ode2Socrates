@@ -35,10 +35,66 @@
   --sidebar-w:   352px;
   --topbar-h:    52px;
 
+  /* Accent alpha variants — used in JSX inline styles */
+  --accent-a08:  rgba(124,58,237,0.08);
+  --accent-a12:  rgba(124,58,237,0.12);
+  --accent-a15:  rgba(124,58,237,0.15);
+  --accent-a20:  rgba(124,58,237,0.20);
+  --accent-a25:  rgba(124,58,237,0.25);
+  --accent-a30:  rgba(124,58,237,0.30);
+  --accent-a35:  rgba(124,58,237,0.35);
+  --accent-a40:  rgba(124,58,237,0.40);
+
   font-family: 'Inter', -apple-system, sans-serif;
   font-size: 14px;
   line-height: 1.5;
   color: var(--text-primary);
+}
+
+/* ─── Blue (TRON #7DFDFE) accent ──────────────────────────────── */
+[data-accent="blue"] {
+  --purple-dim:    #003B3C;
+  --purple-mid:    #00B5B6;
+  --purple-bright: #7DFDFE;
+  --purple-pale:   #A8FDFE;
+  --lavender:      #D3FEFE;
+  --lilac:         #EAFFFE;
+  --border-glow:   rgba(125,253,254,0.27);
+  --ghost-edge:    rgba(125,253,254,0.2);
+  --solid-edge:    #7DFDFE;
+  --text-accent:   #7DFDFE;
+  --node-border:   #004B4C;
+  --accent-a08:    rgba(125,253,254,0.08);
+  --accent-a12:    rgba(125,253,254,0.12);
+  --accent-a15:    rgba(125,253,254,0.15);
+  --accent-a20:    rgba(125,253,254,0.20);
+  --accent-a25:    rgba(125,253,254,0.25);
+  --accent-a30:    rgba(125,253,254,0.30);
+  --accent-a35:    rgba(125,253,254,0.35);
+  --accent-a40:    rgba(125,253,254,0.40);
+}
+
+/* ─── White accent ────────────────────────────────────────────── */
+[data-accent="white"] {
+  --purple-dim:    #2A2A3A;
+  --purple-mid:    #9999BB;
+  --purple-bright: #CCCCDD;
+  --purple-pale:   #E0E0EE;
+  --lavender:      #EFEFFF;
+  --lilac:         #FFFFFF;
+  --border-glow:   rgba(255,255,255,0.15);
+  --ghost-edge:    rgba(255,255,255,0.12);
+  --solid-edge:    rgba(255,255,255,0.75);
+  --text-accent:   #DDDDEE;
+  --node-border:   #3A3A52;
+  --accent-a08:    rgba(255,255,255,0.08);
+  --accent-a12:    rgba(255,255,255,0.12);
+  --accent-a15:    rgba(255,255,255,0.15);
+  --accent-a20:    rgba(255,255,255,0.18);
+  --accent-a25:    rgba(255,255,255,0.22);
+  --accent-a30:    rgba(255,255,255,0.26);
+  --accent-a35:    rgba(255,255,255,0.30);
+  --accent-a40:    rgba(255,255,255,0.35);
 }
 
 /* ─── Light mode ──────────────────────────────────────────────────── */
@@ -129,7 +185,7 @@ html, body, #root {
 @keyframes slideInRight { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
 @keyframes slideInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-@keyframes glow { 0%,100% { box-shadow: 0 0 8px #7c3aed44; } 50% { box-shadow: 0 0 20px #7c3aed88; } }
+@keyframes glow { 0%,100% { box-shadow: 0 0 8px var(--border-glow); } 50% { box-shadow: 0 0 20px var(--border-glow); } }
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes shimmer {
   0% { background-position: -200% center; }
@@ -138,9 +194,9 @@ html, body, #root {
 
 /* Socrates logo pulsate while typing */
 @keyframes socrates-pulse {
-  0%   { filter: drop-shadow(0 0 6px #7c3aed99) drop-shadow(0 0 12px #7c3aed44); transform: scale(1); }
-  50%  { filter: drop-shadow(0 0 18px #a78bfacc) drop-shadow(0 0 36px #7c3aed88); transform: scale(1.03); }
-  100% { filter: drop-shadow(0 0 6px #7c3aed99) drop-shadow(0 0 12px #7c3aed44); transform: scale(1); }
+  0%   { filter: drop-shadow(0 0 6px var(--purple-mid)) drop-shadow(0 0 12px var(--border-glow)); transform: scale(1); }
+  50%  { filter: drop-shadow(0 0 18px var(--purple-bright)) drop-shadow(0 0 36px var(--border-glow)); transform: scale(1.03); }
+  100% { filter: drop-shadow(0 0 6px var(--purple-mid)) drop-shadow(0 0 12px var(--border-glow)); transform: scale(1); }
 }
 
 .socrates-typing {
@@ -163,6 +219,37 @@ html, body, #root {
   font-size: 10px;
   fill: var(--purple-bright);
   font-family: 'JetBrains Mono', monospace;
+}
+
+/* Markdown inside Gadfly sidebar */
+.sidebar-markdown p { margin-bottom: 6px; }
+.sidebar-markdown p:last-child { margin-bottom: 0; }
+.sidebar-markdown code {
+  background: var(--bg-hover);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--purple-bright);
+}
+.sidebar-markdown ul, .sidebar-markdown ol {
+  padding-left: 18px;
+  margin-bottom: 6px;
+}
+.sidebar-markdown li { margin-bottom: 3px; }
+.sidebar-markdown strong { color: var(--text-primary); font-weight: 600; }
+.sidebar-markdown em { color: var(--text-secondary); font-style: italic; }
+.sidebar-markdown h1, .sidebar-markdown h2, .sidebar-markdown h3 {
+  color: var(--purple-pale);
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+.sidebar-markdown blockquote {
+  border-left: 2px solid var(--purple-mid);
+  padding-left: 10px;
+  margin: 6px 0;
+  color: var(--text-secondary);
+  font-style: italic;
 }
 
 /* Markdown inside nodes */

@@ -150,7 +150,7 @@ const ASCII_SOCRATES = `
 
 export default function SocratesLogo({ size = 'canvas', showTitle = false, typing = false }) {
   const preStyle = {
-    color: '#a78bfa',
+    color: 'var(--purple-bright)',
     fontSize: '1.1px',
     lineHeight: '1.3px',
     whiteSpace: 'pre',
@@ -172,7 +172,7 @@ export default function SocratesLogo({ size = 'canvas', showTitle = false, typin
           pointerEvents: 'none',
           filter: typing
             ? undefined
-            : 'drop-shadow(0 0 8px #7c3aed55) drop-shadow(0 0 18px #7c3aed22)',
+            : 'drop-shadow(0 0 8px var(--border-glow)) drop-shadow(0 0 18px var(--accent-a12))',
           transition: 'filter 0.3s ease',
           transformOrigin: 'top left',
           overflow: 'hidden',
@@ -184,8 +184,8 @@ export default function SocratesLogo({ size = 'canvas', showTitle = false, typin
           <div style={{
             fontFamily: "'JetBrains Mono', monospace",
             fontSize: '11px', fontWeight: 600,
-            letterSpacing: '0.2em', color: '#a78bfa',
-            textShadow: '0 0 12px #7c3aed66',
+            letterSpacing: '0.2em', color: 'var(--purple-bright)',
+            textShadow: '0 0 12px var(--border-glow)',
             textTransform: 'uppercase', textAlign: 'center',
             marginTop: 4, opacity: 0.7,
           }}>
@@ -210,8 +210,8 @@ export default function SocratesLogo({ size = 'canvas', showTitle = false, typin
         <div style={{
           fontFamily: "'JetBrains Mono', monospace",
           fontSize: '17px', fontWeight: 600,
-          letterSpacing: '0.15em', color: '#a78bfa',
-          textShadow: '0 0 16px #7c3aed66',
+          letterSpacing: '0.15em', color: 'var(--purple-bright)',
+          textShadow: '0 0 16px var(--border-glow)',
           textTransform: 'uppercase',
         }}>
           Ode2Socrates

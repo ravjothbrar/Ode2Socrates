@@ -19,7 +19,7 @@ function WormholeRunner() {
 }
 
 export default function App() {
-  const { initialized, init, view, setView, isDarkMode, blurFocused } = useStore()
+  const { initialized, init, view, setView, isDarkMode, blurFocused, accentColor } = useStore()
   const [typingText, setTypingText] = useState('')
   const [loadError, setLoadError] = useState(null)
   const canvasRef = useRef(null)
@@ -28,6 +28,11 @@ export default function App() {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light')
   }, [isDarkMode])
+
+  // Apply accent colour
+  useEffect(() => {
+    document.documentElement.setAttribute('data-accent', accentColor || 'purple')
+  }, [accentColor])
 
   useEffect(() => {
     init().catch(err => setLoadError(err.message))
@@ -44,6 +49,32 @@ export default function App() {
     if (!node) return
     setView('canvas')
     window.dispatchEvent(new CustomEvent('ode2-pan-to-node', { detail: { nodeId, x: node.x, y: node.y } }))
+  }, [])
+
+  // Handle wormhole node badge navigation
+  useEffect(() => {
+    function handleWormholeNav(e) {
+      const { targetSpaceId, targetNodeId } = e.detail
+      const { switchSpace, setView: sv, nodes: currentNodes } = useStore.getState()
+      if (!targetSpaceId || !targetNodeId) return
+
+      // Travel animation
+      const overlay = document.createElement('div')
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at center,rgba(236,72,153,0.7) 0%,rgba(124,58,237,0.5) 35%,transparent 70%);animation:wormhole-travel 0.65s ease-out forwards;pointer-events:none'
+      document.body.appendChild(overlay)
+      setTimeout(() => overlay.remove(), 700)
+
+      setTimeout(async () => {
+        await switchSpace(targetSpaceId)
+        sv('canvas')
+        setTimeout(() => {
+          const n = useStore.getState().nodes.find(nd => nd.id === targetNodeId)
+          if (n) window.dispatchEvent(new CustomEvent('ode2-pan-to-node', { detail: { nodeId: targetNodeId, x: n.x, y: n.y } }))
+        }, 200)
+      }, 200)
+    }
+    window.addEventListener('ode2-wormhole-navigate', handleWormholeNav)
+    return () => window.removeEventListener('ode2-wormhole-navigate', handleWormholeNav)
   }, [])
 
   if (!initialized) {
@@ -123,13 +154,13 @@ function LoadingScreen({ error }) {
     }}>
       <div style={{ animation: 'pulse 2s infinite', userSelect: 'none' }}>
         <svg width="80" height="116" viewBox="0 0 120 174" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="60" cy="44" rx="32" ry="36" stroke="#4c1d95" strokeWidth="2" fill="none"/>
-          <circle cx="49" cy="43" r="1.5" fill="#4c1d95"/>
-          <circle cx="73" cy="43" r="1.5" fill="#4c1d95"/>
-          <path d="M60 46 Q57 54 59 58 Q60 60 61 58 Q63 54 60 46" stroke="#4c1d95" strokeWidth="1.8" fill="none" strokeLinecap="round"/>
-          <path d="M32 62 Q28 72 30 84 Q34 100 42 110 Q50 118 60 120 Q70 118 78 110 Q86 100 90 84 Q92 72 88 62" stroke="#4c1d95" strokeWidth="2" fill="none"/>
-          <path d="M30 124 Q46 118 60 120 Q74 118 90 124" stroke="#4c1d95" strokeWidth="2" fill="none"/>
-          <path d="M30 124 Q20 132 18 150 Q16 164 20 174 L100 174 Q104 164 102 150 Q100 132 90 124" stroke="#4c1d95" strokeWidth="2" fill="none"/>
+          <ellipse cx="60" cy="44" rx="32" ry="36" stroke="var(--purple-dim)" strokeWidth="2" fill="none"/>
+          <circle cx="49" cy="43" r="1.5" fill="var(--purple-dim)"/>
+          <circle cx="73" cy="43" r="1.5" fill="var(--purple-dim)"/>
+          <path d="M60 46 Q57 54 59 58 Q60 60 61 58 Q63 54 60 46" stroke="var(--purple-dim)" strokeWidth="1.8" fill="none" strokeLinecap="round"/>
+          <path d="M32 62 Q28 72 30 84 Q34 100 42 110 Q50 118 60 120 Q70 118 78 110 Q86 100 90 84 Q92 72 88 62" stroke="var(--purple-dim)" strokeWidth="2" fill="none"/>
+          <path d="M30 124 Q46 118 60 120 Q74 118 90 124" stroke="var(--purple-dim)" strokeWidth="2" fill="none"/>
+          <path d="M30 124 Q20 132 18 150 Q16 164 20 174 L100 174 Q104 164 102 150 Q100 132 90 124" stroke="var(--purple-dim)" strokeWidth="2" fill="none"/>
         </svg>
       </div>
       <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'var(--text-muted)', letterSpacing: '0.1em' }}>

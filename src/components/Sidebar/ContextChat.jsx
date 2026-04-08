@@ -31,20 +31,20 @@ function CitationText({ text, nodes, onCiteClick }) {
             onClick={() => p.nodeId && onCiteClick(p.nodeId)}
             title={p.nodeId ? 'Jump to node' : 'Node not found'}
             style={{
-              background: 'rgba(124,58,237,0.2)',
-              border: '1px solid rgba(124,58,237,0.4)',
+              background: 'var(--accent-a20)',
+              border: '1px solid var(--accent-a40)',
               borderRadius: 4,
               padding: '1px 6px',
-              fontSize: 11,
-              color: p.nodeId ? '#c4b5fd' : '#94a3b8',
+              fontSize: 12,
+              color: p.nodeId ? 'var(--purple-pale)' : '#94a3b8',
               cursor: p.nodeId ? 'pointer' : 'default',
               fontFamily: "'JetBrains Mono', monospace",
               display: 'inline',
               margin: '0 2px',
               transition: 'all 0.1s',
             }}
-            onMouseEnter={e => { if (p.nodeId) e.currentTarget.style.background = 'rgba(124,58,237,0.35)' }}
-            onMouseLeave={e => { if (p.nodeId) e.currentTarget.style.background = 'rgba(124,58,237,0.2)' }}
+            onMouseEnter={e => { if (p.nodeId) e.currentTarget.style.background = 'var(--accent-a35)' }}
+            onMouseLeave={e => { if (p.nodeId) e.currentTarget.style.background = 'var(--accent-a20)' }}
           >
             ◈ {p.snippet.slice(0, 28)}{p.snippet.length > 28 ? '…' : ''}
           </button>
@@ -117,7 +117,7 @@ export default function ContextChat({ onNodeCite }) {
       <div style={{ flex: 1, overflowY: 'auto', padding: '12px 14px' }}>
         {messages.length === 0 && (
           <div style={{ padding: '20px 4px' }}>
-            <div style={{ fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.8 }}>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.8 }}>
               <p style={{ marginBottom: 8, color: 'var(--purple-bright)' }}>💬 Ask anything about your notes.</p>
               <p>The AI retrieves your most relevant nodes and answers in context of what you've written.</p>
               <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -130,15 +130,15 @@ export default function ContextChat({ onNodeCite }) {
                     key={q}
                     onClick={() => { setInput(q); inputRef.current?.focus() }}
                     style={{
-                      background: 'rgba(124,58,237,0.08)',
-                      border: '1px solid rgba(124,58,237,0.25)',
+                      background: 'var(--accent-a08)',
+                      border: '1px solid var(--accent-a25)',
                       borderRadius: 6, padding: '5px 10px',
-                      fontSize: 11, color: 'var(--text-secondary)',
+                      fontSize: 12, color: 'var(--text-secondary)',
                       cursor: 'pointer', textAlign: 'left',
                       transition: 'all 0.1s',
                     }}
-                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(124,58,237,0.15)'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'rgba(124,58,237,0.08)'}
+                    onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-a15)'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'var(--accent-a08)'}
                   >
                     {q}
                   </button>
@@ -163,10 +163,10 @@ export default function ContextChat({ onNodeCite }) {
             {/* Avatar */}
             <div style={{
               width: 22, height: 22, borderRadius: '50%', flexShrink: 0,
-              background: msg.role === 'user' ? 'rgba(124,58,237,0.3)' : 'rgba(124,58,237,0.15)',
-              border: `1px solid ${msg.role === 'user' ? '#7c3aed' : '#4c1d95'}`,
+              background: msg.role === 'user' ? 'var(--accent-a30)' : 'var(--accent-a15)',
+              border: `1px solid ${msg.role === 'user' ? 'var(--purple-mid)' : 'var(--purple-dim)'}`,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 10,
+              fontSize: 11,
             }}>
               {msg.role === 'user' ? '◈' : '⚡'}
             </div>
@@ -175,14 +175,14 @@ export default function ContextChat({ onNodeCite }) {
             <div style={{
               maxWidth: '82%',
               background: msg.role === 'user'
-                ? 'rgba(124,58,237,0.2)'
+                ? 'var(--accent-a20)'
                 : 'rgba(255,255,255,0.03)',
-              border: `1px solid ${msg.role === 'user' ? 'rgba(124,58,237,0.4)' : 'var(--border)'}`,
+              border: `1px solid ${msg.role === 'user' ? 'var(--accent-a40)' : 'var(--border)'}`,
               borderRadius: msg.role === 'user' ? '12px 4px 12px 12px' : '4px 12px 12px 12px',
               padding: '8px 11px',
             }}>
               <div style={{
-                fontSize: 12, lineHeight: 1.7,
+                fontSize: 13, lineHeight: 1.7,
                 color: msg.error ? '#f87171' : 'var(--text-primary)',
                 whiteSpace: 'pre-wrap', wordBreak: 'break-word',
               }}>
@@ -199,7 +199,7 @@ export default function ContextChat({ onNodeCite }) {
               {/* Context nodes used */}
               {msg.role === 'assistant' && msg.relevant?.length > 0 && (
                 <div style={{ marginTop: 7, paddingTop: 7, borderTop: '1px solid rgba(42,42,74,0.6)' }}>
-                  <div style={{ fontSize: 9, color: 'var(--text-muted)', letterSpacing: '0.06em', marginBottom: 4, fontFamily: "'JetBrains Mono', monospace", textTransform: 'uppercase' }}>
+                  <div style={{ fontSize: 10, color: 'var(--text-muted)', letterSpacing: '0.06em', marginBottom: 4, fontFamily: "'JetBrains Mono', monospace", textTransform: 'uppercase' }}>
                     Context from {msg.relevant.length} node{msg.relevant.length > 1 ? 's' : ''}
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
@@ -208,15 +208,15 @@ export default function ContextChat({ onNodeCite }) {
                         key={n.id}
                         onClick={() => onNodeCite(n.id)}
                         style={{
-                          fontSize: 10, padding: '2px 7px', borderRadius: 4,
-                          background: 'rgba(124,58,237,0.12)',
-                          border: '1px solid rgba(124,58,237,0.25)',
+                          fontSize: 11, padding: '2px 7px', borderRadius: 4,
+                          background: 'var(--accent-a12)',
+                          border: '1px solid var(--accent-a25)',
                           color: 'var(--purple-bright)', cursor: 'pointer',
                           fontFamily: "'JetBrains Mono', monospace",
                           transition: 'all 0.1s',
                         }}
-                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(124,58,237,0.25)'}
-                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(124,58,237,0.12)'}
+                        onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-a25)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'var(--accent-a12)'}
                         title={n.content.slice(0, 100)}
                       >
                         ◈ {n.content.slice(0, 22)}{n.content.length > 22 ? '…' : ''}
@@ -231,12 +231,12 @@ export default function ContextChat({ onNodeCite }) {
 
         {loading && messages.length > 0 && messages[messages.length - 1]?.role === 'user' && (
           <div style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '4px 0' }}>
-            <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'rgba(124,58,237,0.15)', border: '1px solid #4c1d95', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10 }}>⚡</div>
+            <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'var(--accent-a15)', border: '1px solid var(--purple-dim)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11 }}>⚡</div>
             <div style={{ display: 'flex', gap: 4 }}>
               {[0, 1, 2].map(i => (
                 <div key={i} style={{
                   width: 5, height: 5, borderRadius: '50%',
-                  background: '#7c3aed', opacity: 0.6,
+                  background: 'var(--purple-mid)', opacity: 0.6,
                   animation: `pulse 1s ${i * 0.2}s infinite`,
                 }} />
               ))}
@@ -254,7 +254,7 @@ export default function ContextChat({ onNodeCite }) {
         flexShrink: 0,
       }}>
         {!hasKey ? (
-          <div style={{ fontSize: 11, color: 'var(--text-muted)', textAlign: 'center', padding: '4px 0' }}>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', textAlign: 'center', padding: '4px 0' }}>
             Add a Groq API key in Settings to use Context Chat.
           </div>
         ) : (
@@ -272,12 +272,12 @@ export default function ContextChat({ onNodeCite }) {
                 background: 'var(--bg-input)',
                 border: '1px solid var(--border)',
                 borderRadius: 8, padding: '7px 10px',
-                fontSize: 12, lineHeight: 1.5,
+                fontSize: 13, lineHeight: 1.5,
                 color: 'var(--text-primary)',
                 resize: 'none', outline: 'none',
                 fontFamily: "'Inter', sans-serif",
               }}
-              onFocus={e => e.target.style.borderColor = '#7c3aed'}
+              onFocus={e => e.target.style.borderColor = 'var(--purple-mid)'}
               onBlur={e => e.target.style.borderColor = 'var(--border)'}
             />
             <button
@@ -285,16 +285,16 @@ export default function ContextChat({ onNodeCite }) {
               disabled={!input.trim() || loading}
               style={{
                 width: 34, height: 34,
-                background: input.trim() && !loading ? 'linear-gradient(135deg, #6d28d9, #5b21b6)' : 'rgba(42,42,74,0.5)',
-                border: `1px solid ${input.trim() && !loading ? '#7c3aed' : 'var(--border)'}`,
+                background: input.trim() && !loading ? 'linear-gradient(135deg, var(--purple-dim), var(--purple-dim))' : 'rgba(42,42,74,0.5)',
+                border: `1px solid ${input.trim() && !loading ? 'var(--purple-mid)' : 'var(--border)'}`,
                 borderRadius: 8,
                 color: input.trim() && !loading ? '#f5f3ff' : 'var(--text-muted)',
                 cursor: input.trim() && !loading ? 'pointer' : 'default',
-                fontSize: 14,
+                fontSize: 15,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 transition: 'all 0.15s',
                 flexShrink: 0,
-                boxShadow: input.trim() && !loading ? '0 0 8px #7c3aed33' : 'none',
+                boxShadow: input.trim() && !loading ? '0 0 8px var(--border-glow)' : 'none',
               }}
             >
               {loading ? <span className="animate-spin" style={{ display: 'inline-block', fontSize: 12 }}>◌</span> : '↑'}
@@ -307,7 +307,7 @@ export default function ContextChat({ onNodeCite }) {
             style={{
               marginTop: 6, background: 'none', border: 'none',
               color: 'var(--text-muted)', cursor: 'pointer',
-              fontSize: 10, padding: 0,
+              fontSize: 11, padding: 0,
               fontFamily: "'JetBrains Mono', monospace",
             }}
           >Clear history</button>
