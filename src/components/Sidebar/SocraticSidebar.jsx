@@ -461,7 +461,7 @@ function IdleState() {
   "I know that I
    know nothing."`}
       </pre>
-      <p style={{ fontSize: 11, color: 'var(--text-muted)', textAlign: 'center', lineHeight: 1.8 }}>
+      <p style={{ fontSize: 17, color: 'var(--text-muted)', textAlign: 'center', lineHeight: 1.8 }}>
         Start typing in The Blur. Socrates will challenge your assumptions every 10 seconds.
       </p>
     </div>

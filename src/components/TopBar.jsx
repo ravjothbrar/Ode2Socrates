@@ -18,11 +18,11 @@ function WhyModal({ onClose }) {
         className="animate-slide-up"
         onClick={e => e.stopPropagation()}
         style={{
-          width: 540, maxWidth: '92vw',
+          width: 648, maxWidth: '92vw',
           background: 'var(--bg-card)',
           border: '1px solid rgba(124,58,237,0.45)',
           borderRadius: 18,
-          padding: '32px 36px 28px',
+          padding: '38px 43px 34px',
           boxShadow: '0 0 60px #7c3aed22, 0 24px 48px rgba(0,0,0,0.65)',
           position: 'relative',
         }}
@@ -54,7 +54,7 @@ function WhyModal({ onClose }) {
 
         {/* Body */}
         <div style={{
-          fontSize: 14, lineHeight: 1.85,
+          fontSize: 17, lineHeight: 1.85,
           color: 'var(--text-secondary)',
           display: 'flex', flexDirection: 'column', gap: 14,
         }}>
@@ -76,7 +76,7 @@ function WhyModal({ onClose }) {
             borderLeft: '3px solid #7c3aed',
             background: 'rgba(124,58,237,0.08)',
             borderRadius: '0 10px 10px 0',
-            fontSize: 16,
+            fontSize: 19,
             fontWeight: 700,
             fontStyle: 'italic',
             color: 'var(--lavender)',
