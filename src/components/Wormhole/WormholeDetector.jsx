@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useStore } from '../../store/useStore'
 import { buildVocab, textToVector, cosineSimilarity } from '../../api/groq'
 import { getNodesBySpace } from '../../db/indexedDB'
-import Button from '../Button'
 
 const SIMILARITY_THRESHOLD = 0.32
 
@@ -85,8 +84,10 @@ export function useWormholeDetector() {
 
 // Panel showing detected wormholes
 export default function WormholePanel() {
-  const { wormholes, wormholeVisible, setWormholeVisible, spaces, switchSpace } = useStore()
+  const { wormholes, wormholeVisible, spaces, nodes, switchSpace } = useStore()
+  const setView = useStore(s => s.setView)
   const [open, setOpen] = useState(false)
+  const [traveling, setTraveling] = useState(false)
 
   if (!wormholeVisible || wormholes.length === 0) return null
 
@@ -94,16 +95,44 @@ export default function WormholePanel() {
     return spaces.find(s => s.id === id)?.name || 'Unknown Space'
   }
 
+  function navigateTo(targetSpaceId, targetNodeId) {
+    setTraveling(true)
+    setOpen(false)
+    setTimeout(() => {
+      switchSpace(targetSpaceId)
+      setView('canvas')
+      setTimeout(() => {
+        const targetNode = useStore.getState().nodes.find(n => n.id === targetNodeId)
+        if (targetNode) {
+          window.dispatchEvent(new CustomEvent('ode2-pan-to-node', {
+            detail: { nodeId: targetNodeId, x: targetNode.x, y: targetNode.y },
+          }))
+        }
+        setTraveling(false)
+      }, 200)
+    }, 450)
+  }
+
   return (
     <>
-      {/* Trigger button */}
+      {/* Wormhole travel animation overlay */}
+      {traveling && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 9999,
+          background: 'radial-gradient(ellipse at center, rgba(236,72,153,0.7) 0%, rgba(124,58,237,0.5) 35%, transparent 70%)',
+          animation: 'wormhole-travel 0.65s ease-out forwards',
+          pointerEvents: 'none',
+        }} />
+      )}
+
+      {/* Trigger button — bottom-right to avoid Controls (canvas) and legend (graph) */}
       <button
         onClick={() => setOpen(v => !v)}
         title={`${wormholes.length} cross-space connection${wormholes.length > 1 ? 's' : ''} detected`}
         style={{
           position: 'absolute',
-          bottom: 90,
-          left: 14,
+          bottom: 16,
+          right: 14,
           zIndex: 50,
           display: 'flex',
           alignItems: 'center',
@@ -111,70 +140,74 @@ export default function WormholePanel() {
           background: open ? 'rgba(236,72,153,0.2)' : 'rgba(13,13,26,0.9)',
           border: `1px solid ${open ? '#ec4899' : 'rgba(236,72,153,0.4)'}`,
           borderRadius: 99,
-          padding: '6px 12px',
+          padding: '6px 14px',
           cursor: 'pointer',
           backdropFilter: 'blur(12px)',
           color: '#f9a8d4',
-          fontSize: 12, fontWeight: 600,
+          fontSize: 15, fontWeight: 600,
           boxShadow: '0 0 16px rgba(236,72,153,0.2)',
           animation: 'pulse 3s infinite',
           transition: 'all 0.15s',
         }}
       >
-        <span style={{ fontSize: 15 }}>🌀</span>
+        <span style={{ fontSize: 18 }}>🌀</span>
         <span>{wormholes.length} Wormhole{wormholes.length > 1 ? 's' : ''}</span>
       </button>
 
-      {/* Panel */}
+      {/* Panel — opens upward from bottom-right */}
       {open && (
         <div
           className="animate-fade-in"
           style={{
             position: 'absolute',
-            bottom: 130,
-            left: 14,
+            bottom: 60,
+            right: 14,
             zIndex: 200,
-            width: 300,
-            maxHeight: 340,
-            overflowY: 'auto',
+            width: 330,
+            maxHeight: 680,
             background: 'rgba(13,13,26,0.97)',
             border: '1px solid rgba(236,72,153,0.3)',
             borderRadius: 14,
             boxShadow: '0 0 40px rgba(236,72,153,0.15), 0 16px 32px rgba(0,0,0,0.5)',
             backdropFilter: 'blur(20px)',
-            padding: 0,
             overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
           {/* Header */}
           <div style={{
-            padding: '12px 14px 8px',
+            padding: '14px 16px 10px',
             borderBottom: '1px solid rgba(236,72,153,0.2)',
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            flexShrink: 0,
           }}>
             <div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#f9a8d4', display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#f9a8d4', display: 'flex', alignItems: 'center', gap: 6 }}>
                 <span>🌀</span> Cross-Space Wormholes
               </div>
-              <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 2 }}>
+              <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 3 }}>
                 Semantic bridges across your spaces
               </div>
             </div>
-            <button onClick={() => setOpen(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: 16 }}>×</button>
+            <button
+              onClick={() => setOpen(false)}
+              style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: 18 }}
+            >×</button>
           </div>
 
           {/* Wormhole list */}
-          <div style={{ padding: '8px 0', maxHeight: 260, overflowY: 'auto' }}>
+          <div style={{ padding: '8px 0', overflowY: 'auto', flex: 1 }}>
             {wormholes.map(w => (
               <div key={w.id} style={{
-                padding: '10px 14px',
+                padding: '12px 16px',
                 borderBottom: '1px solid rgba(42,42,74,0.4)',
               }}>
-                {/* Similarity score */}
+                {/* Similarity score bar */}
                 <div style={{
-                  fontSize: 9, color: '#ec4899', marginBottom: 7,
+                  fontSize: 11, color: '#ec4899', marginBottom: 10,
                   fontFamily: "'JetBrains Mono', monospace",
-                  display: 'flex', alignItems: 'center', gap: 6,
+                  display: 'flex', alignItems: 'center', gap: 8,
                 }}>
                   <div style={{ flex: 1, height: 2, background: 'rgba(42,42,74,0.6)', borderRadius: 1 }}>
                     <div style={{ width: `${w.sim * 100}%`, height: '100%', background: '#ec4899', borderRadius: 1 }} />
@@ -182,17 +215,22 @@ export default function WormholePanel() {
                   <span>{Math.round(w.sim * 100)}% match</span>
                 </div>
 
-                {/* Two nodes */}
+                {/* Node A */}
                 <WormholeNode
                   spaceName={getSpaceName(w.spaceAId)}
                   content={w.nodeAContent}
-                  onClick={() => switchSpace(w.spaceAId)}
+                  targetSpaceName={getSpaceName(w.spaceBId)}
+                  onNavigate={() => navigateTo(w.spaceBId, w.nodeBId)}
                 />
-                <div style={{ textAlign: 'center', fontSize: 14, color: '#ec4899', margin: '4px 0', opacity: 0.7 }}>⟷</div>
+
+                <div style={{ textAlign: 'center', fontSize: 18, color: '#ec4899', margin: '6px 0', opacity: 0.6 }}>⟷</div>
+
+                {/* Node B */}
                 <WormholeNode
                   spaceName={getSpaceName(w.spaceBId)}
                   content={w.nodeBContent}
-                  onClick={() => switchSpace(w.spaceBId)}
+                  targetSpaceName={getSpaceName(w.spaceAId)}
+                  onNavigate={() => navigateTo(w.spaceAId, w.nodeAId)}
                 />
               </div>
             ))}
@@ -206,26 +244,46 @@ export default function WormholePanel() {
   )
 }
 
-function WormholeNode({ spaceName, content, onClick }) {
+function WormholeNode({ spaceName, content, targetSpaceName, onNavigate }) {
   const [h, setH] = useState(false)
+  const [btnH, setBtnH] = useState(false)
   return (
-    <button
-      onClick={onClick}
-      onMouseEnter={() => setH(true)}
-      onMouseLeave={() => setH(false)}
-      style={{
-        width: '100%', textAlign: 'left', background: h ? 'rgba(236,72,153,0.08)' : 'rgba(255,255,255,0.02)',
-        border: `1px solid ${h ? 'rgba(236,72,153,0.3)' : 'rgba(42,42,74,0.4)'}`,
-        borderRadius: 7, padding: '6px 9px', cursor: 'pointer',
-        transition: 'all 0.1s',
-      }}
-    >
-      <div style={{ fontSize: 9, color: '#ec4899', fontFamily: "'JetBrains Mono', monospace", marginBottom: 2, letterSpacing: '0.04em' }}>
+    <div style={{
+      background: 'rgba(255,255,255,0.02)',
+      border: '1px solid rgba(42,42,74,0.4)',
+      borderRadius: 8,
+      padding: '8px 11px',
+    }}>
+      <div style={{
+        fontSize: 11, color: '#ec4899',
+        fontFamily: "'JetBrains Mono', monospace",
+        marginBottom: 4, letterSpacing: '0.04em',
+      }}>
         ◈ {spaceName}
       </div>
-      <div style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+      <div style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.45, marginBottom: 8 }}>
         "{content}{content.length >= 60 ? '…' : ''}"
       </div>
-    </button>
+      <button
+        onClick={onNavigate}
+        onMouseEnter={() => setBtnH(true)}
+        onMouseLeave={() => setBtnH(false)}
+        style={{
+          display: 'flex', alignItems: 'center', gap: 5,
+          padding: '5px 11px',
+          background: btnH ? 'rgba(236,72,153,0.2)' : 'rgba(236,72,153,0.08)',
+          border: `1px solid ${btnH ? '#ec4899' : 'rgba(236,72,153,0.35)'}`,
+          borderRadius: 6,
+          color: '#f9a8d4',
+          fontSize: 12, fontWeight: 600,
+          cursor: 'pointer',
+          transition: 'all 0.15s',
+          boxShadow: btnH ? '0 0 12px rgba(236,72,153,0.3)' : 'none',
+        }}
+      >
+        <span>🌀</span>
+        <span>Jump to {targetSpaceName}</span>
+      </button>
+    </div>
   )
 }

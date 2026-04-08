@@ -41,17 +41,17 @@ async function* streamChat({ apiKey, messages, model = DEFAULT_MODEL, temperatur
 
 // ─── Socratic Rejoinder ────────────────────────────────────────────────────
 
-export async function* getSocraticRejoinder({ apiKey, text, context = [] }) {
-  const messages = [
-    {
-      role: 'system',
-      content: `You are Socrates — a relentless, intellectually rigorous philosophical interlocutor.
+export async function* getSocraticRejoinder({ apiKey, text, context = [], forceDevil = false }) {
+  const systemContent = forceDevil
+    ? `You are Socrates. Play Devil's Advocate: steelman the strongest possible counter-position to the user's view. Be concise (2-4 sentences). Never flatter. Start your response with "⚡".`
+    : `You are Socrates — a relentless, intellectually rigorous philosophical interlocutor.
 The user is thinking out loud. Your job is to:
 1. Ask ONE sharp, probing Socratic question that exposes an assumption, contradiction, or gap in their reasoning.
-2. OR briefly play Devil's Advocate — steelman the strongest counter-position.
-3. Be concise (2-4 sentences max). Never flatter. Never summarise. Just challenge.
-Format: Start with either "❓" for a question or "⚡" for a Devil's Advocate challenge.`,
-    },
+2. Be concise (2-4 sentences max). Never flatter. Never summarise. Just challenge.
+Format: Start with "❓" followed by your question.`
+
+  const messages = [
+    { role: 'system', content: systemContent },
     ...context.slice(-4),
     { role: 'user', content: `My current thought:\n\n${text}` },
   ]

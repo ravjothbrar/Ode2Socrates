@@ -216,7 +216,7 @@ function GadflyStepContent() {
 
   return (
     <>
-      <p>The <strong style={{ color: '#c4b5fd' }}>Gadfly tab</strong> in the right sidebar automatically fires Socratic challenges as you type — at key word-count milestones.</p>
+      <p>The <strong style={{ color: '#c4b5fd' }}>Gadfly tab</strong> in the right sidebar automatically fires Socratic challenges as you type.</p>
       <ul style={{ marginTop: 12, paddingLeft: 20, lineHeight: 2 }}>
         <li><code style={codeStyle}>❓</code> A probing question exposing your assumptions</li>
         <li><code style={codeStyle}>⚡</code> A Devil's Advocate counter-position</li>
