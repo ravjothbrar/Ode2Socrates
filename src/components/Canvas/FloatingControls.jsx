@@ -34,8 +34,8 @@ function Pill({ children, active, onClick, title }) {
 export default function FloatingControls() {
   const {
     view, setView,
-    spaces, activeSpaceId, switchSpace, createSpace,
-    setSettingsOpen, toggleCommandPalette,
+    spaces, activeSpaceId, switchSpace, createSpace, deleteSpace,
+    toggleCommandPalette,
     nodes, edges,
   } = useStore()
 
@@ -95,7 +95,7 @@ export default function FloatingControls() {
                 position: 'absolute', top: 'calc(100% + 6px)', right: 0,
                 background: 'rgba(13,13,26,0.97)',
                 border: '1px solid var(--border)',
-                borderRadius: 12, width: 200,
+                borderRadius: 12, width: 220,
                 zIndex: 500,
                 boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
                 overflow: 'hidden',
@@ -104,23 +104,47 @@ export default function FloatingControls() {
             >
               <div style={{ padding: '6px 0' }}>
                 {spaces.map(s => (
-                  <button key={s.id}
-                    onClick={() => { switchSpace(s.id); setSpacesOpen(false) }}
-                    style={{
-                      width: '100%', display: 'flex', alignItems: 'center', gap: 8,
-                      padding: '8px 14px',
-                      background: s.id === activeSpaceId ? 'rgba(124,58,237,0.15)' : 'transparent',
-                      border: 'none', cursor: 'pointer',
-                      borderLeft: s.id === activeSpaceId ? '2px solid #7c3aed' : '2px solid transparent',
-                    }}
-                    onMouseEnter={e => { if (s.id !== activeSpaceId) e.currentTarget.style.background = 'rgba(124,58,237,0.08)' }}
-                    onMouseLeave={e => { if (s.id !== activeSpaceId) e.currentTarget.style.background = 'transparent' }}
-                  >
-                    <span style={{ color: 'var(--purple-mid)', fontSize: 11 }}>
-                      {s.id === activeSpaceId ? '◉' : '○'}
-                    </span>
-                    <span style={{ fontSize: 13, color: 'var(--text-primary)' }}>{s.name}</span>
-                  </button>
+                  <div key={s.id} style={{ display: 'flex', alignItems: 'center' }}>
+                    <button
+                      onClick={() => { switchSpace(s.id); setSpacesOpen(false) }}
+                      style={{
+                        flex: 1, display: 'flex', alignItems: 'center', gap: 8,
+                        padding: '8px 14px',
+                        background: s.id === activeSpaceId ? 'rgba(124,58,237,0.15)' : 'transparent',
+                        border: 'none', cursor: 'pointer',
+                        borderLeft: s.id === activeSpaceId ? '2px solid #7c3aed' : '2px solid transparent',
+                      }}
+                      onMouseEnter={e => { if (s.id !== activeSpaceId) e.currentTarget.style.background = 'rgba(124,58,237,0.08)' }}
+                      onMouseLeave={e => { if (s.id !== activeSpaceId) e.currentTarget.style.background = 'transparent' }}
+                    >
+                      <span style={{ color: 'var(--purple-mid)', fontSize: 11 }}>
+                        {s.id === activeSpaceId ? '◉' : '○'}
+                      </span>
+                      <span style={{ fontSize: 13, color: 'var(--text-primary)' }}>{s.name}</span>
+                    </button>
+                    {/* Delete space button */}
+                    <button
+                      title="Delete space"
+                      onClick={async (e) => {
+                        e.stopPropagation()
+                        if (spaces.length === 1) return
+                        if (window.confirm(`Delete space "${s.name}"? This cannot be undone.`)) {
+                          await deleteSpace(s.id)
+                        }
+                      }}
+                      disabled={spaces.length === 1}
+                      style={{
+                        background: 'transparent', border: 'none',
+                        cursor: spaces.length === 1 ? 'default' : 'pointer',
+                        color: spaces.length === 1 ? 'transparent' : 'var(--text-muted)',
+                        fontSize: 11, padding: '8px 10px',
+                        transition: 'color 0.1s',
+                        opacity: spaces.length === 1 ? 0 : 1,
+                      }}
+                      onMouseEnter={e => { if (spaces.length > 1) e.currentTarget.style.color = '#f87171' }}
+                      onMouseLeave={e => { if (spaces.length > 1) e.currentTarget.style.color = 'var(--text-muted)' }}
+                    >✕</button>
+                  </div>
                 ))}
               </div>
               <div style={{ borderTop: '1px solid var(--border)', padding: '6px 0' }}>
@@ -146,9 +170,6 @@ export default function FloatingControls() {
             <div style={{ position: 'fixed', inset: 0, zIndex: 499 }} onClick={() => setSpacesOpen(false)} />
           )}
         </div>
-
-        {/* Settings */}
-        <Pill onClick={() => setSettingsOpen(true)} title="Settings">⚙</Pill>
 
         {/* Cmd+K */}
         <Pill onClick={toggleCommandPalette} title="Command Palette (Ctrl+K)">

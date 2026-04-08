@@ -19,10 +19,15 @@ function WormholeRunner() {
 }
 
 export default function App() {
-  const { initialized, init, view, setView } = useStore()
+  const { initialized, init, view, setView, isDarkMode, blurFocused } = useStore()
   const [typingText, setTypingText] = useState('')
   const [loadError, setLoadError] = useState(null)
   const canvasRef = useRef(null)
+
+  // Apply theme on mount and when it changes
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light')
+  }, [isDarkMode])
 
   useEffect(() => {
     init().catch(err => setLoadError(err.message))
@@ -38,7 +43,6 @@ export default function App() {
     const node = nodes.find(n => n.id === nodeId)
     if (!node) return
     setView('canvas')
-    // Emit a custom event that the canvas view can pick up
     window.dispatchEvent(new CustomEvent('ode2-pan-to-node', { detail: { nodeId, x: node.x, y: node.y } }))
   }, [])
 
@@ -64,7 +68,8 @@ export default function App() {
         {/* Workspace (canvas + logo overlay) */}
         <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }} ref={canvasRef}>
 
-          {/* Socrates ASCII logo — outside topbar, overlaid on canvas top-left */}
+          {/* Socrates SVG logo — overlaid on canvas top-left.
+              In graph view, shift right so graph stats (at left:170) don't overlap it. */}
           <div
             className="canvas-logo"
             style={{
@@ -76,7 +81,7 @@ export default function App() {
               userSelect: 'none',
             }}
           >
-            <SocratesLogo size="canvas" showTitle={false} />
+            <SocratesLogo size="canvas" showTitle={false} typing={blurFocused} />
           </div>
 
           {/* Canvas / Graph */}
@@ -116,43 +121,20 @@ function LoadingScreen({ error }) {
       alignItems: 'center', justifyContent: 'center',
       background: 'var(--bg-deep)', gap: 20,
     }}>
-      <pre style={{
-        fontFamily: "'JetBrains Mono', monospace",
-        fontSize: '8px', lineHeight: '10px',
-        color: '#4c1d95',
-        textAlign: 'center',
-        animation: 'pulse 2s infinite',
-        userSelect: 'none',
-      }}>
-{`      .-"""""-.
-    .'          '.
-   /   O      O   \\
-  :           ^    :
-  |    \\___/       |
-   \\             /
-    '.          .'
-      '-......-'
-
-   initialising…`}
-      </pre>
-      {error ? (
-        <div style={{
-          color: '#f87171', fontSize: 13,
-          background: 'rgba(239,68,68,0.1)',
-          border: '1px solid #7f1d1d',
-          borderRadius: 8, padding: '10px 20px',
-        }}>
-          Error: {error}
-        </div>
-      ) : (
-        <div style={{
-          fontFamily: "'JetBrains Mono', monospace",
-          fontSize: 11, color: 'var(--text-muted)',
-          letterSpacing: '0.1em',
-        }}>
-          loading indexedDB…
-        </div>
-      )}
+      <div style={{ animation: 'pulse 2s infinite', userSelect: 'none' }}>
+        <svg width="80" height="116" viewBox="0 0 120 174" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="60" cy="44" rx="32" ry="36" stroke="#4c1d95" strokeWidth="2" fill="none"/>
+          <circle cx="49" cy="43" r="1.5" fill="#4c1d95"/>
+          <circle cx="73" cy="43" r="1.5" fill="#4c1d95"/>
+          <path d="M60 46 Q57 54 59 58 Q60 60 61 58 Q63 54 60 46" stroke="#4c1d95" strokeWidth="1.8" fill="none" strokeLinecap="round"/>
+          <path d="M32 62 Q28 72 30 84 Q34 100 42 110 Q50 118 60 120 Q70 118 78 110 Q86 100 90 84 Q92 72 88 62" stroke="#4c1d95" strokeWidth="2" fill="none"/>
+          <path d="M30 124 Q46 118 60 120 Q74 118 90 124" stroke="#4c1d95" strokeWidth="2" fill="none"/>
+          <path d="M30 124 Q20 132 18 150 Q16 164 20 174 L100 174 Q104 164 102 150 Q100 132 90 124" stroke="#4c1d95" strokeWidth="2" fill="none"/>
+        </svg>
+      </div>
+      <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'var(--text-muted)', letterSpacing: '0.1em' }}>
+        {error ? `Error: ${error}` : 'loading indexedDB…'}
+      </div>
     </div>
   )
 }
