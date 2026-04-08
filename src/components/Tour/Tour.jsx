@@ -51,7 +51,7 @@ const STEPS = [
     content: (
       <>
         <p>That glowing figure in the top-left is Socrates himself — watching over your canvas.</p>
-        <p style={{ marginTop: 12 }}>He's not just decoration. The <strong style={{ color: '#c4b5fd' }}>Socratic Engine</strong> in the sidebar is his voice. He pulses when you type.</p>
+        <p style={{ marginTop: 12 }}>He's not just decoration. The <strong style={{ color: '#c4b5fd' }}>Socratic Engine</strong> in the sidebar is his voice.</p>
       </>
     ),
   },

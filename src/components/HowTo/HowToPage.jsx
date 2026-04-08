@@ -209,7 +209,7 @@ export default function HowToPage() {
 
           {/* Body */}
           <div style={{ flex: 1, overflowY: 'auto', padding: '32px 40px' }}>
-            <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.85 }}>
+            <div style={{ fontSize: 'clamp(13px, 1.1vw, 17px)', color: 'var(--text-secondary)', lineHeight: 1.85 }}>
               {current.content}
             </div>
           </div>
@@ -222,7 +222,7 @@ export default function HowToPage() {
 // ─── Section content components ────────────────────────────────────────────
 
 const H = ({ children }) => (
-  <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', margin: '18px 0 6px' }}>{children}</h3>
+  <h3 style={{ fontSize: 'clamp(13px, 1.1vw, 17px)', fontWeight: 700, color: 'var(--text-primary)', margin: '18px 0 6px' }}>{children}</h3>
 )
 const P = ({ children }) => <p style={{ marginBottom: 8 }}>{children}</p>
 const C = ({ children }) => (
