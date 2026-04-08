@@ -118,7 +118,7 @@ export default function SocraticSidebar({ typingText, onNodeCite }) {
 
   return (
     <aside style={{
-      width: 'var(--sidebar-w)',
+      width: '352px',
       height: '100%',
       background: 'var(--bg-dark)',
       borderLeft: '1px solid var(--border)',

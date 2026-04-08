@@ -180,8 +180,9 @@ export default function GraphView() {
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
       <svg ref={svgRef} style={{ display: 'block', width: '100%', height: '100%' }} />
+      {/* Stats panel — positioned to the right of the Socrates logo (which sits at left:14) */}
       <div style={{
-        position: 'absolute', top: 16, left: 16,
+        position: 'absolute', top: 16, left: 170,
         background: 'var(--bg-card)', border: '1px solid var(--border)',
         borderRadius: 10, padding: '12px 16px',
         fontSize: 12, color: 'var(--text-secondary)',

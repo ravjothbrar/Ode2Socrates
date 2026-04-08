@@ -12,13 +12,54 @@ const TAG_TYPES = [
   { tag: '#note',     icon: '○', desc: 'A general note' },
 ]
 
+// Formatting toolbar items
+const FORMAT_ACTIONS = [
+  { label: 'B',      title: 'Bold',            wrap: ['**', '**'],       style: { fontWeight: 700 } },
+  { label: 'I',      title: 'Italic',          wrap: ['_', '_'],         style: { fontStyle: 'italic' } },
+  { label: 'U',      title: 'Underline',       wrap: ['<u>', '</u>'],    style: { textDecoration: 'underline' } },
+  { label: 'H1',     title: 'Heading 1',       prefix: '# ',             style: { fontWeight: 700 } },
+  { label: 'H2',     title: 'Heading 2',       prefix: '## ',            style: { fontWeight: 600 } },
+  { label: 'P',      title: 'Paragraph',       prefix: '',               style: {} },
+  { label: '≡',      title: 'Unordered list',  prefix: '- ',             style: {} },
+  { label: '≡₁',     title: 'Ordered list',    prefix: '1. ',            style: {} },
+]
+
+function applyFormat(textarea, action, text, setText) {
+  if (!textarea) return
+  const start = textarea.selectionStart
+  const end = textarea.selectionEnd
+  const selected = text.slice(start, end)
+
+  if (action.wrap) {
+    const [before, after] = action.wrap
+    const newText = text.slice(0, start) + before + (selected || 'text') + after + text.slice(end)
+    setText(newText)
+    setTimeout(() => {
+      const newPos = start + before.length + (selected || 'text').length + after.length
+      textarea.focus()
+      textarea.setSelectionRange(
+        start + before.length,
+        start + before.length + (selected || 'text').length
+      )
+    }, 0)
+  } else if (action.prefix !== undefined) {
+    // Apply prefix to current line
+    const lineStart = text.lastIndexOf('\n', start - 1) + 1
+    const newText = text.slice(0, lineStart) + action.prefix + text.slice(lineStart)
+    setText(newText)
+    setTimeout(() => {
+      textarea.focus()
+      textarea.setSelectionRange(lineStart + action.prefix.length, lineStart + action.prefix.length)
+    }, 0)
+  }
+}
+
 export default function BlurInput({ onTyping }) {
   const { createNode, nodes, createEdge, groqApiKey, setSidebarContent, setSidebarLoading, blurFocused, setBlurFocused } = useStore()
   const [text, setText] = useState('')
   const [tagMenu, setTagMenu] = useState(null)   // { query, start }
   const [submitting, setSubmitting] = useState(false)
   const textareaRef = useRef(null)
-  const throttleRef = useRef(null)
 
   // Notify parent for sidebar throttle
   useEffect(() => {
@@ -151,7 +192,7 @@ export default function BlurInput({ onTyping }) {
       bottom: 24,
       left: '50%',
       transform: 'translateX(-50%)',
-      width: 'min(640px, calc(100vw - 380px))',
+      width: 'min(832px, calc(100vw - 380px))',
       zIndex: 100,
     }}>
       {/* Tag autocomplete menu */}
@@ -168,7 +209,7 @@ export default function BlurInput({ onTyping }) {
           width: 280,
         }}>
           <div style={{ padding: '6px 0' }}>
-            {filteredTags.map((t, i) => (
+            {filteredTags.map((t) => (
               <button
                 key={t.tag}
                 onMouseDown={e => { e.preventDefault(); selectTag(t.tag) }}
@@ -223,6 +264,62 @@ export default function BlurInput({ onTyping }) {
           </div>
         </div>
 
+        {/* ── Formatting Toolbar ── */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2,
+          padding: '6px 14px',
+          borderBottom: '1px solid rgba(42,42,74,0.5)',
+          background: 'rgba(8,8,20,0.4)',
+        }}>
+          {FORMAT_ACTIONS.map((action, idx) => {
+            const isSeparator = idx === 3 || idx === 5 || idx === 6
+            return (
+              <React.Fragment key={action.label}>
+                {isSeparator && (
+                  <div style={{ width: 1, height: 16, background: 'rgba(42,42,74,0.8)', margin: '0 4px' }} />
+                )}
+                <button
+                  title={action.title}
+                  onMouseDown={e => {
+                    e.preventDefault()
+                    applyFormat(textareaRef.current, action, text, setText)
+                  }}
+                  style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    minWidth: 28, height: 26, padding: '0 6px',
+                    background: 'transparent',
+                    border: '1px solid transparent',
+                    borderRadius: 5,
+                    cursor: 'pointer',
+                    color: 'var(--text-secondary)',
+                    fontSize: action.label === 'B' ? 13 : action.label.length > 1 ? 11 : 13,
+                    fontFamily: action.label === 'B' || action.label === 'I' || action.label === 'U'
+                      ? "'Inter', sans-serif"
+                      : "'JetBrains Mono', monospace",
+                    fontWeight: 600,
+                    transition: 'all 0.1s',
+                    ...action.style,
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = 'rgba(124,58,237,0.2)'
+                    e.currentTarget.style.borderColor = 'rgba(124,58,237,0.4)'
+                    e.currentTarget.style.color = '#c4b5fd'
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = 'transparent'
+                    e.currentTarget.style.borderColor = 'transparent'
+                    e.currentTarget.style.color = 'var(--text-secondary)'
+                  }}
+                >
+                  {action.label}
+                </button>
+              </React.Fragment>
+            )
+          })}
+        </div>
+
         <textarea
           ref={textareaRef}
           value={text}
@@ -231,11 +328,11 @@ export default function BlurInput({ onTyping }) {
           onFocus={() => setBlurFocused(true)}
           onBlur={() => setBlurFocused(false)}
           placeholder="Brain dump here… let thoughts flow unfiltered."
-          rows={3}
+          rows={4}
           style={{
             width: '100%',
-            minHeight: 72,
-            maxHeight: 200,
+            minHeight: 94,
+            maxHeight: 260,
             resize: 'vertical',
             background: 'transparent',
             border: 'none',

@@ -34,6 +34,9 @@ export const useStore = create((set, get) => ({
   blurText: '',
   blurFocused: false,
 
+  // ─── Theme ─────────────────────────────────────────────────────
+  isDarkMode: true,
+
   // ─── Wormholes ─────────────────────────────────────────────────
   wormholes: [],             // [{ id, spaceAId, nodeAId, spaceBId, nodeBId, sim }]
   wormholeVisible: false,
@@ -224,6 +227,12 @@ export const useStore = create((set, get) => ({
 
   setSidebarContent(c) { set({ sidebarContent: c }) },
   setSidebarLoading(v) { set({ sidebarLoading: v }) },
+
+  toggleDarkMode() {
+    const next = !get().isDarkMode
+    set({ isDarkMode: next })
+    document.documentElement.setAttribute('data-theme', next ? 'dark' : 'light')
+  },
 
   // Exposed by sidebar component for gap analysis
   triggerGapAnalysis: null,
