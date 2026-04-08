@@ -28,6 +28,8 @@ export default function SocraticSidebar({ typingText, onNodeCite }) {
   const prevWordCountRef = useRef(0)
   const milestonesFiredRef = useRef(new Set())
   const autoCapReachedRef = useRef(false)
+  // Devil's Advocate every 5th rejoinder
+  const rejoinderCountRef = useRef(0)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -40,9 +42,12 @@ export default function SocraticSidebar({ typingText, onNodeCite }) {
     setSidebarLoading(true)
     setStreamText('')
 
+    rejoinderCountRef.current += 1
+    const forceDevil = rejoinderCountRef.current % 5 === 0
+
     let accumulated = ''
     try {
-      for await (const chunk of getSocraticRejoinder({ apiKey: groqApiKey, text, context: conversationHistory.slice(-4) })) {
+      for await (const chunk of getSocraticRejoinder({ apiKey: groqApiKey, text, context: conversationHistory.slice(-4), forceDevil })) {
         if (abortRef.current) break
         accumulated += chunk
         setStreamText(accumulated)

@@ -147,6 +147,12 @@ html, body, #root {
   animation: socrates-pulse 1.4s ease-in-out infinite;
 }
 
+@keyframes wormhole-travel {
+  0%   { opacity: 0; transform: scale(0.3); }
+  25%  { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(2.5); }
+}
+
 .animate-fade-in { animation: fadeIn 0.2s ease; }
 .animate-slide-right { animation: slideInRight 0.25s ease; }
 .animate-slide-up { animation: slideInUp 0.2s ease; }
