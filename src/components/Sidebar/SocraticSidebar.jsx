@@ -3,6 +3,7 @@ import { useStore } from '../../store/useStore'
 import { getSocraticRejoinder, getGapAnalysis } from '../../api/groq'
 import Button from '../Button'
 import ContextChat from './ContextChat'
+import SocratesLogo from '../Logo/SocratesLogo'
 
 // Word milestones that auto-trigger Gadfly (fires once each, in order)
 const WORD_MILESTONES = [12, 50, 100, 200]
@@ -218,7 +219,7 @@ export default function SocraticSidebar({ typingText, onNodeCite }) {
           </div>
 
           {!hasKey && <NoKeyPrompt />}
-          {hasKey && !streamText && !sidebarContent && !sidebarLoading && <IdleState />}
+          {!streamText && !sidebarContent && !sidebarLoading && <IdleState />}
 
           {/* Distillation */}
           {isDistillation && sidebarContent.atoms?.length > 0 && (
@@ -442,27 +443,10 @@ function NoKeyPrompt() {
 
 function IdleState() {
   return (
-    <div style={{ padding: '10px 0' }}>
-      <pre style={{
-        fontSize: '7px', lineHeight: '9px',
-        color: '#3b1a7a',
-        fontFamily: "'JetBrains Mono', monospace",
-        textAlign: 'center', marginBottom: 12,
-        userSelect: 'none',
-      }}>
-{`  ?     ?     ?
-   \\   |   /
-    \\ \\|/ /
-  ---( o )---
-    / /|\\ \\
-   /   |   \\
-  ?     |     ?
-
-  "I know that I
-   know nothing."`}
-      </pre>
-      <p style={{ fontSize: 17, color: 'var(--text-muted)', textAlign: 'center', lineHeight: 1.8 }}>
-        Start typing in The Blur. Socrates will challenge your assumptions every 10 seconds.
+    <div style={{ padding: '10px 0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <SocratesLogo size="canvas" />
+      <p style={{ fontSize: 17, color: 'var(--text-muted)', textAlign: 'center', lineHeight: 1.8, marginTop: 14 }}>
+        Start typing in The Blur. Socrates will challenge your assumptions.
       </p>
     </div>
   )
