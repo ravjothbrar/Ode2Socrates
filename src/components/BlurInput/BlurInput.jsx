@@ -55,7 +55,7 @@ function applyFormat(textarea, action, text, setText) {
 }
 
 export default function BlurInput({ onTyping }) {
-  const { createNode, nodes, createEdge, groqApiKey, setSidebarContent, setSidebarLoading, blurFocused, setBlurFocused } = useStore()
+  const { createNode, nodes, createEdge, groqApiKey, setSidebarContent, setSidebarLoading, blurFocused, setBlurFocused, setBlurText, setBlurWordCount } = useStore()
   const [text, setText] = useState('')
   const [tagMenu, setTagMenu] = useState(null)   // { query, start }
   const [submitting, setSubmitting] = useState(false)
@@ -83,6 +83,11 @@ export default function BlurInput({ onTyping }) {
   function onChange(e) {
     const val = e.target.value
     setText(val)
+
+    // Sync to store for Gadfly word-milestone triggers
+    const wc = val.trim() ? val.trim().split(/\s+/).length : 0
+    setBlurText(val)
+    setBlurWordCount(wc)
 
     // Detect # for tag menu
     const pos = e.target.selectionStart
@@ -180,6 +185,8 @@ export default function BlurInput({ onTyping }) {
     await findGhostLinks(node)
 
     setText('')
+    setBlurText('')
+    setBlurWordCount(0)
     setSubmitting(false)
     textareaRef.current?.focus()
   }

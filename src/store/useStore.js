@@ -33,6 +33,7 @@ export const useStore = create((set, get) => ({
   // ─── Blur input ────────────────────────────────────────────────
   blurText: '',
   blurFocused: false,
+  blurWordCount: 0,
 
   // ─── Theme ─────────────────────────────────────────────────────
   isDarkMode: true,
@@ -219,6 +220,7 @@ export const useStore = create((set, get) => ({
   setSidebarTab(tab) { set({ sidebarTab: tab }) },
   setBlurText(t) { set({ blurText: t }) },
   setBlurFocused(v) { set({ blurFocused: v }) },
+  setBlurWordCount(n) { set({ blurWordCount: n }) },
 
   async setGroqApiKey(key) {
     await db.setSetting('groqApiKey', key)

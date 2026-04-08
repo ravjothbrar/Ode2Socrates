@@ -101,19 +101,19 @@ export default function HowToPage() {
         className="animate-slide-up"
         onClick={e => e.stopPropagation()}
         style={{
-          width: 820, maxWidth: '94vw',
-          height: '80vh', maxHeight: 640,
+          width: 1640, maxWidth: '97vw',
+          height: '92vh', maxHeight: 1280,
           background: 'var(--bg-card)',
           border: '1px solid rgba(124,58,237,0.35)',
-          borderRadius: 18,
-          boxShadow: '0 0 80px #7c3aed22, 0 32px 64px rgba(0,0,0,0.7)',
+          borderRadius: 24,
+          boxShadow: '0 0 100px #7c3aed22, 0 48px 96px rgba(0,0,0,0.7)',
           display: 'flex',
           overflow: 'hidden',
         }}
       >
         {/* Left nav */}
         <div style={{
-          width: 210,
+          width: 420,
           flexShrink: 0,
           background: 'rgba(13,13,26,0.6)',
           borderRight: '1px solid var(--border)',
@@ -123,13 +123,13 @@ export default function HowToPage() {
         }}>
           {/* Header */}
           <div style={{
-            padding: '16px 14px 10px',
+            padding: '32px 28px 20px',
             borderBottom: '1px solid var(--border)',
             flexShrink: 0,
           }}>
             <div style={{
-              fontSize: 13, fontWeight: 700, color: 'var(--purple-bright)',
-              letterSpacing: '0.05em', marginBottom: 8,
+              fontSize: 26, fontWeight: 700, color: 'var(--purple-bright)',
+              letterSpacing: '0.05em', marginBottom: 16,
               fontFamily: "'JetBrains Mono', monospace",
             }}>
               HOW TO?
@@ -140,8 +140,8 @@ export default function HowToPage() {
               placeholder="Search…"
               style={{
                 width: '100%', background: 'var(--bg-input)',
-                border: '1px solid var(--border)', borderRadius: 6,
-                padding: '5px 8px', fontSize: 11,
+                border: '1px solid var(--border)', borderRadius: 10,
+                padding: '10px 16px', fontSize: 22,
                 color: 'var(--text-primary)', outline: 'none',
                 fontFamily: "'Inter', sans-serif",
               }}
@@ -151,25 +151,25 @@ export default function HowToPage() {
           </div>
 
           {/* Nav links */}
-          <div style={{ flex: 1, overflowY: 'auto', padding: '6px 0' }}>
+          <div style={{ flex: 1, overflowY: 'auto', padding: '12px 0' }}>
             {filtered.map(s => (
               <button
                 key={s.id}
                 onClick={() => { setActive(s.id); setSearch('') }}
                 style={{
-                  width: '100%', display: 'flex', alignItems: 'center', gap: 8,
-                  padding: '8px 14px',
+                  width: '100%', display: 'flex', alignItems: 'center', gap: 16,
+                  padding: '16px 28px',
                   background: active === s.id ? 'rgba(124,58,237,0.2)' : 'transparent',
                   border: 'none', cursor: 'pointer', textAlign: 'left',
-                  borderLeft: active === s.id ? '2px solid #7c3aed' : '2px solid transparent',
+                  borderLeft: active === s.id ? '4px solid #7c3aed' : '4px solid transparent',
                   transition: 'all 0.1s',
                 }}
                 onMouseEnter={e => { if (active !== s.id) e.currentTarget.style.background = 'rgba(124,58,237,0.08)' }}
                 onMouseLeave={e => { if (active !== s.id) e.currentTarget.style.background = 'transparent' }}
               >
-                <span style={{ fontSize: 13, width: 18, textAlign: 'center' }}>{s.icon}</span>
+                <span style={{ fontSize: 26, width: 36, textAlign: 'center' }}>{s.icon}</span>
                 <span style={{
-                  fontSize: 12, fontWeight: active === s.id ? 600 : 400,
+                  fontSize: 24, fontWeight: active === s.id ? 600 : 400,
                   color: active === s.id ? 'var(--lavender)' : 'var(--text-secondary)',
                 }}>
                   {s.label}
@@ -183,14 +183,14 @@ export default function HowToPage() {
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           {/* Title bar */}
           <div style={{
-            padding: '16px 24px',
+            padding: '32px 48px',
             borderBottom: '1px solid var(--border)',
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             flexShrink: 0,
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ fontSize: 20 }}>{current.icon}</span>
-              <h2 style={{ fontSize: 16, fontWeight: 700, color: 'var(--lavender)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+              <span style={{ fontSize: 40 }}>{current.icon}</span>
+              <h2 style={{ fontSize: 32, fontWeight: 700, color: 'var(--lavender)' }}>
                 {current.label}
               </h2>
             </div>
@@ -199,7 +199,7 @@ export default function HowToPage() {
               style={{
                 background: 'none', border: 'none',
                 color: 'var(--text-muted)', cursor: 'pointer',
-                fontSize: 18, padding: '2px 6px', borderRadius: 4,
+                fontSize: 36, padding: '4px 12px', borderRadius: 8,
                 transition: 'color 0.1s',
               }}
               onMouseEnter={e => e.target.style.color = 'var(--text-primary)'}
@@ -208,8 +208,8 @@ export default function HowToPage() {
           </div>
 
           {/* Body */}
-          <div style={{ flex: 1, overflowY: 'auto', padding: '24px' }}>
-            <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.85, maxWidth: 520 }}>
+          <div style={{ flex: 1, overflowY: 'auto', padding: '48px' }}>
+            <div style={{ fontSize: 26, color: 'var(--text-secondary)', lineHeight: 1.85, maxWidth: 900 }}>
               {current.content}
             </div>
           </div>
@@ -222,28 +222,28 @@ export default function HowToPage() {
 // ─── Section content components ────────────────────────────────────────────
 
 const H = ({ children }) => (
-  <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', margin: '18px 0 6px' }}>{children}</h3>
+  <h3 style={{ fontSize: 26, fontWeight: 700, color: 'var(--text-primary)', margin: '36px 0 12px' }}>{children}</h3>
 )
-const P = ({ children }) => <p style={{ marginBottom: 8 }}>{children}</p>
+const P = ({ children }) => <p style={{ marginBottom: 16 }}>{children}</p>
 const C = ({ children }) => (
   <code style={{
-    background: 'rgba(124,58,237,0.2)', padding: '1px 5px',
-    borderRadius: 3, color: '#c4b5fd',
-    fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
+    background: 'rgba(124,58,237,0.2)', padding: '2px 10px',
+    borderRadius: 6, color: '#c4b5fd',
+    fontFamily: "'JetBrains Mono', monospace", fontSize: 22,
   }}>{children}</code>
 )
-const Li = ({ children }) => <li style={{ marginBottom: 5 }}>{children}</li>
+const Li = ({ children }) => <li style={{ marginBottom: 10 }}>{children}</li>
 const Callout = ({ children, color = '#7c3aed' }) => (
   <div style={{
     background: `${color}11`, border: `1px solid ${color}33`,
-    borderRadius: 8, padding: '10px 14px', margin: '12px 0',
-    fontSize: 12, lineHeight: 1.7,
+    borderRadius: 14, padding: '20px 28px', margin: '24px 0',
+    fontSize: 24, lineHeight: 1.7,
   }}>{children}</div>
 )
 const ShortcutRow = ({ keys, desc }) => (
-  <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 8 }}>
+  <div style={{ display: 'flex', gap: 24, alignItems: 'center', marginBottom: 16 }}>
     <C>{keys}</C>
-    <span style={{ color: 'var(--text-secondary)', fontSize: 12 }}>{desc}</span>
+    <span style={{ color: 'var(--text-secondary)', fontSize: 24 }}>{desc}</span>
   </div>
 )
 
@@ -298,10 +298,10 @@ function NodesSection() {
       <P>Every node has a type that controls its visual appearance and how the AI classifies it. The type is inferred automatically or set manually via tags.</P>
       <H>Node types</H>
       {types.map(t => (
-        <div key={t.tag} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 7 }}>
-          <div style={{ width: 8, height: 8, borderRadius: '50%', background: t.color, flexShrink: 0 }} />
+        <div key={t.tag} style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 14 }}>
+          <div style={{ width: 16, height: 16, borderRadius: '50%', background: t.color, flexShrink: 0 }} />
           <C>{t.tag}</C>
-          <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{t.desc}</span>
+          <span style={{ fontSize: 24, color: 'var(--text-secondary)' }}>{t.desc}</span>
         </div>
       ))}
       <H>Editing nodes</H>
