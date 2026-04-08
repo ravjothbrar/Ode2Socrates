@@ -4,12 +4,16 @@ import { getSocraticRejoinder, getGapAnalysis } from '../../api/groq'
 import Button from '../Button'
 import ContextChat from './ContextChat'
 
+// Word milestones that auto-trigger Gadfly (fires once each, in order)
+const WORD_MILESTONES = [12, 50, 100, 200]
+
 export default function SocraticSidebar({ typingText, onNodeCite }) {
   const {
     groqApiKey, sidebarContent, setSidebarContent,
     sidebarLoading, setSidebarLoading,
     createNode, createEdge, nodes,
     sidebarTab, setSidebarTab,
+    blurWordCount, blurText,
   } = useStore()
 
   const [streamText, setStreamText] = useState('')
@@ -18,6 +22,11 @@ export default function SocraticSidebar({ typingText, onNodeCite }) {
   const [answerText, setAnswerText] = useState('')
   const abortRef = useRef(false)
   const bottomRef = useRef(null)
+
+  // Word-milestone tracking
+  const prevWordCountRef = useRef(0)
+  const milestonesFiredRef = useRef(new Set())
+  const autoCapReachedRef = useRef(false)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -76,16 +85,34 @@ export default function SocraticSidebar({ typingText, onNodeCite }) {
     useStore.setState({ triggerGapAnalysis })
   }, [triggerGapAnalysis])
 
-  // ─── Throttled typing trigger ──────────────────────────────────
-  const throttleTimerRef = useRef(null)
+  // ─── Word-milestone Gadfly triggers ───────────────────────────
+  // Fires at 12, 50, 100, 200 words — each only once per typing session.
+  // After the 200-word milestone fires, auto-triggers pause until ↻ resets.
   useEffect(() => {
-    if (!typingText || sidebarContent?.type === 'gap') return
-    clearTimeout(throttleTimerRef.current)
-    throttleTimerRef.current = setTimeout(() => {
-      triggerRejoinder(typingText)
-    }, 10000)
-    return () => clearTimeout(throttleTimerRef.current)
-  }, [typingText])
+    if (sidebarContent?.type === 'gap') return
+    if (autoCapReachedRef.current) return
+
+    const prev = prevWordCountRef.current
+    prevWordCountRef.current = blurWordCount
+
+    // Reset milestones if user clears text
+    if (blurWordCount < 5 && prev > 5) {
+      milestonesFiredRef.current.clear()
+      autoCapReachedRef.current = false
+      return
+    }
+
+    for (const milestone of WORD_MILESTONES) {
+      if (blurWordCount >= milestone && !milestonesFiredRef.current.has(milestone)) {
+        milestonesFiredRef.current.add(milestone)
+        if (milestone === 200) autoCapReachedRef.current = true
+        // Use current blurText from store so we have the latest full content
+        const currentText = useStore.getState().blurText
+        triggerRejoinder(currentText || typingText || '')
+        break // trigger one milestone at a time
+      }
+    }
+  }, [blurWordCount, sidebarContent])
 
   // ─── Distillation helpers ──────────────────────────────────────
   async function acceptAtom(atom, parentContent) {
@@ -152,7 +179,12 @@ export default function SocraticSidebar({ typingText, onNodeCite }) {
         {/* Manual refresh only on Gadfly tab */}
         {sidebarTab === 'gadfly' && (
           <button
-            onClick={() => triggerRejoinder(typingText || nodes.slice(-1)[0]?.content || '')}
+            onClick={() => {
+              // Manual refresh — reset auto-cap so milestones can re-fire
+              autoCapReachedRef.current = false
+              milestonesFiredRef.current.clear()
+              triggerRejoinder(useStore.getState().blurText || typingText || nodes.slice(-1)[0]?.content || '')
+            }}
             disabled={!hasKey}
             title="Refresh Socratic challenge manually"
             style={{
