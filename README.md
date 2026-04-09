@@ -2,7 +2,9 @@
 
 > *"The unexamined thought is not worth keeping."* — Socrates (probably)
 
-A spatial, Socratic note-taking app. All your data lives **locally in your browser** — nothing is ever stored on a server.
+A spatial, Socratic note-taking app. **[Try it live →](https://ravjothbrar.com/Ode2Socrates/)**
+
+> Your thoughts never leave your device. Everything is stored locally in your browser — no accounts, no servers, no data collection. What you write here is yours alone.
 
 ![Ode 2 Socrates](public/screenshot.png)
 
@@ -20,11 +22,6 @@ Ode 2 Socrates is a browser-based reflection tool — built to help you look inw
 - **Context Chat** — ask direct questions about your notes; the AI has full context of everything on your canvas.
 - **Wormholes** — link nodes across different Spaces to surface unexpected connections between separate threads of thought.
 
-## Getting started
+## Privacy
 
-```bash
-npm install
-npm run dev
-```
-
-Add your [Groq API key](https://console.groq.com) in Settings to enable the Socratic Engine.
+All data is stored in your browser's IndexedDB. Nothing is transmitted to any server — not your notes, not your graph, not your thinking. The only external call made is to the Groq API (for the Socratic Engine), using your own API key, sent directly from your browser.
