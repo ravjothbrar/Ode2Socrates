@@ -6,8 +6,8 @@ import Button from '../Button'
 import ContextChat from './ContextChat'
 import SocratesLogo from '../Logo/SocratesLogo'
 
-// Word milestones that auto-trigger Gadfly (fires once each, in order)
-const WORD_MILESTONES = [12, 50, 100, 200]
+// Word milestones that auto-trigger Gadfly while typing (fires once each, in order)
+const WORD_MILESTONES = [7, 20, 50, 100, 200]
 
 export default function SocraticSidebar({ typingText, onNodeCite }) {
   const {
@@ -38,8 +38,9 @@ export default function SocraticSidebar({ typingText, onNodeCite }) {
 
   // ─── Socratic Rejoinder ────────────────────────────────────────
   const triggerRejoinder = useCallback(async (text) => {
-    if (!groqApiKey || !text?.trim() || text.length < 20) return
+    if (!groqApiKey || !text?.trim()) return
     abortRef.current = false
+    setSidebarTab('gadfly')
     setSidebarLoading(true)
     setStreamText('')
 
@@ -65,7 +66,7 @@ export default function SocraticSidebar({ typingText, onNodeCite }) {
     } finally {
       setSidebarLoading(false)
     }
-  }, [groqApiKey, conversationHistory, setSidebarLoading])
+  }, [groqApiKey, conversationHistory, setSidebarLoading, setSidebarTab])
 
   // ─── Gap Analysis ──────────────────────────────────────────────
   const triggerGapAnalysis = useCallback(async (selectedNodes) => {
@@ -92,8 +93,13 @@ export default function SocraticSidebar({ typingText, onNodeCite }) {
     useStore.setState({ triggerGapAnalysis })
   }, [triggerGapAnalysis])
 
+  // Expose triggerRejoinder so BlurInput can call it on commit
+  useEffect(() => {
+    useStore.setState({ triggerRejoinder })
+  }, [triggerRejoinder])
+
   // ─── Word-milestone Gadfly triggers ───────────────────────────
-  // Fires at 12, 50, 100, 200 words — each only once per typing session.
+  // Fires at 7, 20, 50, 100, 200 words — each only once per typing session.
   // After the 200-word milestone fires, auto-triggers pause until ↻ resets.
   useEffect(() => {
     if (sidebarContent?.type === 'gap') return
