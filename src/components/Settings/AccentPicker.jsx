@@ -12,9 +12,30 @@ const ACCENTS = [
   {
     id: 'blue',
     label: 'TRON Blue',
-    desc: 'Electric cyan inspired by TRON Legacy.',
-    swatch: 'linear-gradient(135deg, #003B3C, #00B5B6, #7DFDFE)',
-    border: '#7DFDFE',
+    desc: 'Electric blue inspired by TRON Legacy.',
+    swatch: 'linear-gradient(135deg, #003D5C, #00BFFF, #40D4FF)',
+    border: '#00BFFF',
+  },
+  {
+    id: 'pink',
+    label: 'Wormhole Pink',
+    desc: 'Vibrant magenta — like the wormhole portal.',
+    swatch: 'linear-gradient(135deg, #831843, #ec4899, #f472b6)',
+    border: '#ec4899',
+  },
+  {
+    id: 'gold',
+    label: 'Philosopher\'s Gold',
+    desc: 'Warm amber — the colour of ancient wisdom.',
+    swatch: 'linear-gradient(135deg, #78350f, #d97706, #f59e0b)',
+    border: '#d97706',
+  },
+  {
+    id: 'sage',
+    label: 'Sage Green',
+    desc: 'Calm emerald — clarity in thought.',
+    swatch: 'linear-gradient(135deg, #065f46, #059669, #34d399)',
+    border: '#059669',
   },
   {
     id: 'white',
@@ -29,7 +50,7 @@ export default function AccentPicker() {
   const { accentColor, setAccentColor } = useStore()
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       {ACCENTS.map(a => {
         const active = (accentColor || 'purple') === a.id
         return (
@@ -38,7 +59,7 @@ export default function AccentPicker() {
             onClick={() => setAccentColor(a.id)}
             style={{
               display: 'flex', alignItems: 'center', gap: 14,
-              padding: '11px 14px',
+              padding: '10px 14px',
               background: active ? 'rgba(255,255,255,0.06)' : 'transparent',
               border: `2px solid ${active ? a.border : 'rgba(255,255,255,0.1)'}`,
               borderRadius: 12,
@@ -51,18 +72,18 @@ export default function AccentPicker() {
           >
             {/* Swatch */}
             <div style={{
-              width: 38, height: 38, borderRadius: 8, flexShrink: 0,
+              width: 36, height: 36, borderRadius: 8, flexShrink: 0,
               background: a.swatch,
               boxShadow: active ? `0 0 12px ${a.border}66` : 'none',
               transition: 'box-shadow 0.15s',
             }} />
             <div style={{ flex: 1 }}>
               <div style={{
-                fontSize: 14, fontWeight: 600,
+                fontSize: 13, fontWeight: 600,
                 color: active ? a.border : 'var(--text-primary)',
                 marginBottom: 2, transition: 'color 0.15s',
               }}>{a.label}</div>
-              <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{a.desc}</div>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{a.desc}</div>
             </div>
             {active && (
               <div style={{

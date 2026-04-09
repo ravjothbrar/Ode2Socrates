@@ -13,17 +13,17 @@ function Pill({ children, active, onClick, title }) {
         display: 'flex', alignItems: 'center', gap: 5,
         padding: '5px 12px',
         background: active
-          ? 'rgba(124,58,237,0.3)'
-          : h ? 'rgba(167,139,250,0.12)' : 'rgba(13,13,26,0.85)',
-        border: `1px solid ${active ? '#7c3aed' : h ? '#7c3aed88' : 'rgba(42,42,74,0.8)'}`,
+          ? 'var(--accent-a30)'
+          : h ? 'var(--accent-a12)' : 'rgba(13,13,26,0.85)',
+        border: `1px solid ${active ? 'var(--purple-mid)' : h ? 'var(--accent-a35)' : 'rgba(42,42,74,0.8)'}`,
         borderRadius: 99,
-        color: active ? '#e9d5ff' : h ? '#c4b5fd' : '#94a3b8',
+        color: active ? 'var(--lavender)' : h ? 'var(--purple-pale)' : '#94a3b8',
         cursor: 'pointer',
         fontSize: 12, fontWeight: active ? 600 : 400,
         transition: 'all 0.15s ease',
         backdropFilter: 'blur(12px)',
         whiteSpace: 'nowrap',
-        boxShadow: active ? '0 0 12px #7c3aed33' : h ? '0 0 8px #7c3aed22' : 'none',
+        boxShadow: active ? '0 0 12px var(--border-glow)' : h ? '0 0 8px var(--border-glow)' : 'none',
       }}
     >
       {children}
@@ -70,15 +70,17 @@ export default function FloatingControls() {
         </div>
 
         {/* View toggle */}
-        <div style={{
-          display: 'flex',
-          background: 'rgba(13,13,26,0.85)',
-          border: '1px solid rgba(42,42,74,0.8)',
-          borderRadius: 99,
-          padding: 3,
-          gap: 2,
-          backdropFilter: 'blur(12px)',
-        }}>
+        <div
+          className="view-toggle"
+          style={{
+            display: 'flex',
+            background: 'rgba(13,13,26,0.85)',
+            border: '1px solid rgba(42,42,74,0.8)',
+            borderRadius: 99,
+            padding: 3,
+            gap: 2,
+            backdropFilter: 'blur(12px)',
+          }}>
           <Pill active={view === 'canvas'} onClick={() => setView('canvas')}>⊡ Canvas</Pill>
           <Pill active={view === 'graph'} onClick={() => setView('graph')}>⬡ Graph</Pill>
         </div>
@@ -110,11 +112,11 @@ export default function FloatingControls() {
                       style={{
                         flex: 1, display: 'flex', alignItems: 'center', gap: 8,
                         padding: '8px 14px',
-                        background: s.id === activeSpaceId ? 'rgba(124,58,237,0.15)' : 'transparent',
+                        background: s.id === activeSpaceId ? 'var(--accent-a15)' : 'transparent',
                         border: 'none', cursor: 'pointer',
-                        borderLeft: s.id === activeSpaceId ? '2px solid #7c3aed' : '2px solid transparent',
+                        borderLeft: s.id === activeSpaceId ? '2px solid var(--purple-mid)' : '2px solid transparent',
                       }}
-                      onMouseEnter={e => { if (s.id !== activeSpaceId) e.currentTarget.style.background = 'rgba(124,58,237,0.08)' }}
+                      onMouseEnter={e => { if (s.id !== activeSpaceId) e.currentTarget.style.background = 'var(--accent-a08)' }}
                       onMouseLeave={e => { if (s.id !== activeSpaceId) e.currentTarget.style.background = 'transparent' }}
                     >
                       <span style={{ color: 'var(--purple-mid)', fontSize: 11 }}>
@@ -158,7 +160,7 @@ export default function FloatingControls() {
                     padding: '8px 14px', background: 'transparent', border: 'none',
                     cursor: 'pointer', color: 'var(--purple-bright)', fontSize: 12,
                   }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(124,58,237,0.1)'}
+                  onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-a12)'}
                   onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                 >
                   <span>✦</span> New Space

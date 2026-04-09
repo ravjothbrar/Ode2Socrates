@@ -40,23 +40,23 @@ export default function Button({
 
   const variants = {
     default: {
-      background: hovered ? 'rgba(167,139,250,0.12)' : 'rgba(124,58,237,0.08)',
-      borderColor: hovered ? '#7c3aed' : '#2a2a4a',
-      color: hovered ? '#e9d5ff' : '#a78bfa',
-      boxShadow: hovered ? '0 0 0 1px #7c3aed44, 0 2px 8px #7c3aed22' : 'none',
+      background: hovered ? 'var(--accent-a12)' : 'var(--accent-a08)',
+      borderColor: hovered ? 'var(--purple-mid)' : 'var(--border)',
+      color: hovered ? 'var(--lavender)' : 'var(--purple-bright)',
+      boxShadow: hovered ? '0 0 0 1px var(--border-glow), 0 2px 8px var(--border-glow)' : 'none',
     },
     primary: {
       background: hovered
-        ? 'linear-gradient(135deg, #7c3aed, #6d28d9)'
-        : 'linear-gradient(135deg, #6d28d9, #5b21b6)',
-      borderColor: hovered ? '#a78bfa' : '#7c3aed',
-      color: '#f5f3ff',
-      boxShadow: hovered ? '0 0 16px #7c3aed44' : '0 0 8px #7c3aed22',
+        ? 'linear-gradient(135deg, var(--purple-mid), var(--purple-dim))'
+        : 'linear-gradient(135deg, var(--purple-dim), var(--purple-mid))',
+      borderColor: hovered ? 'var(--purple-bright)' : 'var(--purple-mid)',
+      color: 'rgba(255,255,255,0.93)',
+      boxShadow: hovered ? '0 0 16px var(--border-glow)' : '0 0 8px var(--border-glow)',
     },
     ghost: {
-      background: hovered ? 'rgba(167,139,250,0.08)' : 'transparent',
+      background: hovered ? 'var(--accent-a08)' : 'transparent',
       borderColor: 'transparent',
-      color: hovered ? '#c4b5fd' : '#94a3b8',
+      color: hovered ? 'var(--purple-pale)' : '#94a3b8',
       boxShadow: 'none',
     },
     danger: {
@@ -66,10 +66,10 @@ export default function Button({
       boxShadow: 'none',
     },
     active: {
-      background: 'rgba(167,139,250,0.2)',
-      borderColor: '#7c3aed',
-      color: '#e9d5ff',
-      boxShadow: '0 0 0 1px #7c3aed66',
+      background: 'var(--accent-a20)',
+      borderColor: 'var(--purple-mid)',
+      color: 'var(--lavender)',
+      boxShadow: '0 0 0 1px var(--border-glow)',
     },
   }
 
