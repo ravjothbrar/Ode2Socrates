@@ -2,6 +2,14 @@ import React, { useState } from 'react'
 import { useStore } from '../store/useStore'
 import SocratesLogo from './Logo/SocratesLogo'
 
+function GearIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0 }}>
+      <path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.92c.04-.34.07-.69.07-1.08s-.03-.74-.07-1.08l2.32-1.82a.56.56 0 0 0 .13-.7l-2.2-3.81a.55.55 0 0 0-.68-.24l-2.73 1.1a8.13 8.13 0 0 0-1.85-1.07l-.41-2.91A.553.553 0 0 0 14 1h-4c-.27 0-.5.19-.55.46l-.41 2.91A8.13 8.13 0 0 0 7.2 5.44L4.47 4.34a.536.536 0 0 0-.68.24L1.59 8.39a.553.553 0 0 0 .13.7l2.32 1.82C4 11.26 3.97 11.61 3.97 12s.03.74.07 1.08L1.72 14.9a.556.556 0 0 0-.13.7l2.2 3.81c.14.24.41.32.68.24l2.73-1.1c.57.4 1.19.74 1.85 1.07l.41 2.91c.05.27.28.47.55.47h4c.27 0 .5-.19.55-.46l.41-2.91a8.13 8.13 0 0 0 1.85-1.07l2.73 1.1c.26.1.54 0 .68-.24l2.2-3.81a.555.555 0 0 0-.13-.7l-2.32-1.82z"/>
+    </svg>
+  )
+}
+
 function WhyModal({ onClose }) {
   return (
     <div
@@ -28,26 +36,22 @@ function WhyModal({ onClose }) {
           position: 'relative',
         }}
       >
-        {/* Close */}
         <button
           onClick={onClose}
           style={{
             position: 'absolute', top: 14, right: 16,
             background: 'none', border: 'none',
             color: 'var(--text-muted)', cursor: 'pointer',
-            fontSize: 20, lineHeight: 1,
-            transition: 'color 0.1s',
+            fontSize: 20, lineHeight: 1, transition: 'color 0.1s',
           }}
           onMouseEnter={e => e.currentTarget.style.color = 'var(--text-primary)'}
           onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
         >×</button>
 
-        {/* Socrates art */}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
           <SocratesLogo size="canvas" />
         </div>
 
-        {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
           <span style={{
             fontSize: 15, fontWeight: 700,
@@ -58,7 +62,6 @@ function WhyModal({ onClose }) {
           }}>◈ Why Ode 2 Socrates?</span>
         </div>
 
-        {/* Body */}
         <div style={{
           fontSize: 17, lineHeight: 1.85,
           color: 'var(--text-secondary)',
@@ -74,26 +77,19 @@ function WhyModal({ onClose }) {
           <p>
             Through the power of Socratic rejoinders, we truly get to the heart of your thoughts.
           </p>
-
-          {/* Quote */}
           <blockquote style={{
-            margin: '8px 0 0',
-            padding: '14px 20px',
+            margin: '8px 0 0', padding: '14px 20px',
             borderLeft: '3px solid var(--purple-mid)',
             background: 'var(--accent-a08)',
             borderRadius: '0 10px 10px 0',
-            fontSize: 19,
-            fontWeight: 700,
-            fontStyle: 'italic',
-            color: 'var(--lavender)',
-            lineHeight: 1.75,
+            fontSize: 19, fontWeight: 700, fontStyle: 'italic',
+            color: 'var(--lavender)', lineHeight: 1.75,
           }}>
             "Think of Ode 2 Socrates as your space to find out what you think, how you think,
             and develop yourself."
           </blockquote>
         </div>
 
-        {/* Footer */}
         <div style={{ marginTop: 24, display: 'flex', justifyContent: 'flex-end' }}>
           <button
             onClick={onClose}
@@ -118,25 +114,13 @@ function WhyModal({ onClose }) {
 }
 
 export default function TopBar() {
-  const { setTourOpen, setSettingsOpen, isDarkMode, toggleDarkMode } = useStore()
+  const { setTourOpen, setSettingsOpen, setHowToOpen } = useStore()
   const [hoverRav, setHoverRav] = useState(false)
   const [hoverWhy, setHoverWhy] = useState(false)
-  const [hoverQ, setHoverQ] = useState(false)
+  const [hoverTour, setHoverTour] = useState(false)
+  const [hoverHowTo, setHoverHowTo] = useState(false)
   const [hoverSettings, setHoverSettings] = useState(false)
-  const [hoverTheme, setHoverTheme] = useState(false)
   const [whyOpen, setWhyOpen] = useState(false)
-
-  const iconBtn = (hover) => ({
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    width: 34, height: 34,
-    background: hover ? 'var(--accent-a15)' : 'var(--accent-a08)',
-    border: `1px solid ${hover ? 'var(--purple-mid)' : 'var(--accent-a35)'}`,
-    borderRadius: 99,
-    cursor: 'pointer',
-    transition: 'all 0.15s ease',
-    color: hover ? 'var(--lavender)' : 'var(--purple-bright)',
-    boxShadow: hover ? '0 0 0 1px var(--border-glow)' : 'none',
-  })
 
   const pillStyle = (hover) => ({
     display: 'flex', alignItems: 'center', gap: 7,
@@ -153,6 +137,14 @@ export default function TopBar() {
     fontSize: 12, fontWeight: 500,
     fontFamily: "'Inter', sans-serif",
     letterSpacing: '0.01em',
+  })
+
+  // Settings is a slightly more prominent pill
+  const settingsStyle = (hover) => ({
+    ...pillStyle(hover),
+    padding: '5px 16px 5px 12px',
+    fontWeight: 600,
+    fontSize: 12,
   })
 
   return (
@@ -172,7 +164,6 @@ export default function TopBar() {
       }}>
         {/* LEFT: Why? pill + Ravjoth Brar pill */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-          {/* Why? pill */}
           <button
             onMouseEnter={() => setHoverWhy(true)}
             onMouseLeave={() => setHoverWhy(false)}
@@ -187,7 +178,6 @@ export default function TopBar() {
             Why?
           </button>
 
-          {/* Ravjoth Brar pill */}
           <a
             href="https://ravjothbrar.com/"
             target="_blank"
@@ -204,13 +194,10 @@ export default function TopBar() {
           </a>
         </div>
 
-        {/* CENTER: Title — absolutely centered */}
+        {/* CENTER: Title */}
         <div style={{
-          position: 'absolute',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          pointerEvents: 'none',
-          userSelect: 'none',
+          position: 'absolute', left: '50%', transform: 'translateX(-50%)',
+          pointerEvents: 'none', userSelect: 'none',
         }}>
           <span style={{
             fontSize: 18, fontWeight: 800,
@@ -226,33 +213,48 @@ export default function TopBar() {
           </span>
         </div>
 
-        {/* RIGHT: theme toggle + ? + ⚙ */}
+        {/* RIGHT: Tour + How To + Settings */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto', flexShrink: 0 }}>
+          {/* Tour button */}
           <button
-            onMouseEnter={() => setHoverTheme(true)}
-            onMouseLeave={() => setHoverTheme(false)}
-            onClick={toggleDarkMode}
-            title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-            style={{ ...iconBtn(hoverTheme), fontSize: 15 }}
-          >
-            {isDarkMode ? '☀' : '🌙'}
-          </button>
-
-          <button
-            onMouseEnter={() => setHoverQ(true)}
-            onMouseLeave={() => setHoverQ(false)}
+            onMouseEnter={() => setHoverTour(true)}
+            onMouseLeave={() => setHoverTour(false)}
             onClick={() => setTourOpen(true)}
             title="Take the tour"
-            style={{ ...iconBtn(hoverQ), fontSize: 14, fontWeight: 700, fontFamily: "'Inter', sans-serif" }}
-          >?</button>
+            style={pillStyle(hoverTour)}
+          >
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
+              <path d="M2 3l10 5-10 5V3z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" fill="none"/>
+            </svg>
+            Tour
+          </button>
 
+          {/* How To button */}
+          <button
+            onMouseEnter={() => setHoverHowTo(true)}
+            onMouseLeave={() => setHoverHowTo(false)}
+            onClick={() => setHowToOpen(true)}
+            title="How To guide"
+            style={pillStyle(hoverHowTo)}
+          >
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" strokeWidth="1.5"/>
+              <path d="M5 6h6M5 9h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+            How To
+          </button>
+
+          {/* Settings — gear icon + label */}
           <button
             onMouseEnter={() => setHoverSettings(true)}
             onMouseLeave={() => setHoverSettings(false)}
             onClick={() => setSettingsOpen(true)}
             title="Settings"
-            style={{ ...iconBtn(hoverSettings), fontSize: 18, width: 36, height: 36 }}
-          >⚙</button>
+            style={settingsStyle(hoverSettings)}
+          >
+            <GearIcon />
+            Settings
+          </button>
         </div>
       </header>
 

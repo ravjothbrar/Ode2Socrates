@@ -269,6 +269,7 @@ export const useStore = create((set, get) => ({
     set({ accentColor: color })
   },
 
-  // Exposed by sidebar component for gap analysis
+  // Exposed by sidebar component for gap analysis / commit-triggered rejoinders
   triggerGapAnalysis: null,
+  triggerRejoinder: null,
 }))

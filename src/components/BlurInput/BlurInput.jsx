@@ -184,6 +184,9 @@ export default function BlurInput({ onTyping }) {
     const node = await createNode({ content: trimmed, type, tags })
     await findGhostLinks(node)
 
+    // Trigger an immediate Socratic rejoinder on every commit
+    useStore.getState().triggerRejoinder?.(trimmed)
+
     setText('')
     setBlurText('')
     setBlurWordCount(0)
